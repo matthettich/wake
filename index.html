@@ -1,108 +1,58 @@
 <!doctype html>
-<html lang="en" data-skin="cloud">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>wake.mobi</title>
+<title>matthettich.xyz</title>
 <meta name="claude:viewport-fit-sides" content="cover">
-<meta name="description" content="Electronic music and hip hop beats by Matthew Hettich, a.k.a. WAKE.">
-<meta property="og:title" content="WAKE · electronic music and hip hop beats by Matthew Hettich">
-<meta property="og:description" content="Electronic music and hip hop beats by Matthew Hettich, a.k.a. WAKE.">
+<meta name="description" content="Electronic music by Matthew Hettich.">
+<meta property="og:title" content="WAKE · electronic music by Matthew Hettich">
+<meta property="og:description" content="Electronic music by Matthew Hettich.">
 <meta property="og:type" content="website">
 <!--
   ============================================================================================
-  wake.mobi: one page. The words, links, releases and tracks all live in content.json.
+  WAKE: one page. The words, links, releases and tracks all live in content.json.
   To change what the site SAYS, edit content.json. Edit this file only to change how it LOOKS or WORKS.
 
-  Map of this file (search for the label, e.g. "10 MUSIC" or "renderMusic"):
-    STYLE   1 TOKENS & SKINS · 2 BASE · 3 TOP BAR · 4 KEYS (buttons) · 5 SKIN MENU · 6 HERO & SKY
-            7 TRACKER · 8 SECTIONS & CARDS · 9 BIO · 10 MUSIC · 11 APPS · 12 CONTACT · 13 FOOTER
-            14 NARROW SCREENS
+  Map of this file (search for the label, e.g. "9 MUSIC" or "renderMusic"):
+    STYLE   1 TOKENS (the IDM skin) · 2 BASE · 3 TOP BAR · 4 KEYS (buttons) · 5 HERO & SKY · 6 TRACKER
+            7 SECTIONS & CARDS · 8 BIO · 9 MUSIC · 10 APPS · 11 CONTACT · 12 FOOTER · 13 NARROW SCREENS
     HTML    TOP BAR · HERO · TRACKER · BIO · MUSIC · APPS · CONTACT · FOOTER
-    SCRIPT  A HELPERS · B COLOURS · C SKINS · D CROWN · E SKY · F COVERS · G TEXT HELPERS
-            H CONTENT (renderHero, renderBio, renderMusic, renderApps, renderContact)
-            I AUDIO · J TRACKER PLAYER · K NAV TABS · L START
+    SCRIPT  A HELPERS · B COLOURS · C CROWN · D SKY · E COVERS · F TEXT HELPERS
+            G CONTENT (renderHero, renderBio, renderMusic, renderApps, renderContact)
+            H AUDIO · I TRACKER PLAYER · J NAV TABS · K START
   ============================================================================================
 -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Martian+Mono:wdth,wght@75..112.5,100..800&family=Share+Tech+Mono&family=IBM+Plex+Sans+Condensed:wght@400;500;600;700&family=Jost:wght@300;400;500;600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap">
 <style>
 /* ==========================================================================================
-   1 TOKENS & SKINS
+   1 TOKENS: the IDM skin from ...Thunder Plus. Grey paper and black ink, one hazard orange,
+   a little blue; JetBrains Mono throughout. Every colour and font on the page comes from here.
    Layout: a sky band (dithered cloud deck + a floating crown of areoles) with a wide tracker
-   docked on its clouds, then flat Simple-skin panels for bio, music, apps and contact.
-   Every colour and font is a token here; a skin only swaps the values.
-   Simple cloud is the default (Simple cloud night when the visitor's device is dark).
+   docked on its clouds, then flat panels for bio, music, apps and contact.
    ========================================================================================== */
 :root{
   /* colours */
-  --bg:#eceff6; --panel:#f6f7fb; --panel2:#dde2ee; --ink:#4b2448; --muted:#6c6380; --dim:#c4c6da; --on:#fbfaff;
-  --soft:#cf5f98; --alt:#4d7a5b; --red:#b73a2c; --line:var(--ink);
-  --cloud:#fbfcff; --cloud2:#d3d9e8; --spine:#8f86a6;            /* cloud body, cloud shadow, cactus spines */
-  --sig-audio:#22958d; --sig-video:#e3962a; --sig-mod:#7a58c8; --sig-gate:#c93d78;   /* ...Seeds signal colours */
-  --fam1:#def9e7; --fam1e:#a4dab6; --fam1s:#3aa864; --fam2:#f9dee5; --fam2e:#daa4b2; --fam2s:#c93d78;   /* section tints */
-  --fam3:#deedf9; --fam3e:#a4c2da; --fam3s:#2f6fc7; --fam4:#f9f5de; --fam4e:#dad1a4; --fam4s:#d39a1c;   /* (Pastel, Minimal) */
+  --bg:#e9e8e3;       /* paper */
+  --panel:#f2f1ec;    /* cards */
+  --panel2:#dddcd5;   /* top bar, tracker bar, hover */
+  --ink:#141414;      /* text, lines, filled keys */
+  --muted:#505050;    /* labels, secondary text */
+  --dim:#bdbcb6;      /* faint lines, the keys' offset block, empty tracker rows */
+  --on:#ffffff;       /* text on a filled (ink) key */
+  --soft:#ff4d00;     /* the hazard orange: play, notes as they play, links, the areole dots */
+  --on-soft:#141414;  /* text on orange */
+  --alt:#2a6cff;      /* the blue: track and audio tags */
+  --line:var(--ink);
+  --cloud:#f7f6f2; --cloud2:#d2d1ca; --spine:#8a8984;   /* cloud body, cloud shadow, cactus spines */
   /* shape */
-  --r:0px; --rb:0px; --cw:1px;                                     /* card corner, button corner, card border */
-  --btn-shadow:4px 4px 0 0 var(--bg), 4px 4px 0 1.5px var(--dim);  /* the offset block under a key */
+  --btn-shadow:4px 4px 0 0 var(--bg), 4px 4px 0 1.5px var(--dim);   /* the offset block under a key */
   --btn-shadow-dn:1px 1px 0 0 var(--bg), 1px 1px 0 1.5px var(--dim);
-  --card-shadow:none;
   /* type */
-  --f-display:"Martian Mono","Share Tech Mono",ui-monospace,Menlo,monospace;
-  --f-body:"Martian Mono","Share Tech Mono",ui-monospace,Menlo,monospace;
-  --f-grid:"Share Tech Mono","JetBrains Mono",ui-monospace,Menlo,monospace;   /* tracker, labels, keys */
-  --body-size:14px; --body-stretch:87.5%; --body-wght:360; --lh:1.72; --case:uppercase;
-  --name-wght:200; --name-stretch:112.5%; --head-stretch:112.5%;
-  color-scheme:light;
-}
-/* Simple cloud night (this site) */
-:root[data-skin="cloudnight"]{
-  --bg:#151729; --panel:#1b1e35; --panel2:#24284a; --ink:#ecdaf2; --muted:#a99dc1; --dim:#3c3f66; --on:#151729;
-  --soft:#ff88be; --alt:#8dc89b; --red:#ff6b5a; --cloud:#2b2f55; --cloud2:#1e2141; --spine:#6f6a95;
-  color-scheme:dark;
-}
-/* Simple plum (...Thunder Plus colours, this site's fonts) */
-:root[data-skin="plum"]{
-  --bg:#f3e5ef; --panel:#f8eef5; --panel2:#e8d2e2; --ink:#6b2d5c; --muted:#7f5a76; --dim:#d6b7cf; --on:#fff9fd;
-  --soft:#c78ab6; --alt:#3e6e4c; --red:#b73a2c; --cloud:#fdf7fb; --cloud2:#e6cfe0; --spine:#b08aa6;
-  color-scheme:light;
-}
-/* Simple night (...Thunder Plus) */
-:root[data-skin="night"]{
-  --bg:#14182b; --panel:#191e35; --panel2:#232945; --ink:#f0b43c; --muted:#c9a35f; --dim:#3a3f5e; --on:#14182b;
-  --soft:#ffd884; --alt:#7fb6e6; --red:#ff6b5a; --cloud:#262c4c; --cloud2:#1c2139; --spine:#5f6488;
-  --f-display:"Share Tech Mono","JetBrains Mono",ui-monospace,monospace; --f-body:"Share Tech Mono","JetBrains Mono",ui-monospace,monospace;
-  --body-size:15px; --body-stretch:100%; --body-wght:400; --lh:1.6; --name-wght:400; --name-stretch:100%; --head-stretch:100%;
-  color-scheme:dark;
-}
-/* Minimal (...Seeds) */
-:root[data-skin="minimal"]{
-  --bg:#ffffff; --panel:#ffffff; --panel2:#efefef; --ink:#111111; --muted:#5a5a5a; --dim:#111111; --on:#ffffff;
-  --soft:#2f6fc7; --alt:#22958d; --red:#cc3a2c; --line:#111111; --cw:3.5px; --cloud:#f4f4f4; --cloud2:#dedede; --spine:#8a8a8a;
-  --btn-shadow:none; --btn-shadow-dn:none;
-  --f-display:Futura,"Futura PT",Jost,"Century Gothic","Avenir Next",sans-serif; --f-body:Futura,"Futura PT",Jost,"Century Gothic","Avenir Next",sans-serif;
-  --body-size:16px; --body-stretch:100%; --body-wght:400; --lh:1.65; --name-wght:500; --name-stretch:100%; --head-stretch:100%;
-  color-scheme:light;
-}
-/* Minimal black (...Seeds) */
-:root[data-skin="minblack"]{
-  --bg:#000000; --panel:#000000; --panel2:#1a1a1a; --ink:#ffffff; --muted:#b4b4b4; --dim:#ffffff; --on:#000000;
-  --soft:#5a8fe0; --alt:#3ec9bf; --red:#ff5a4a; --line:#ffffff; --cw:3.5px; --cloud:#202020; --cloud2:#121212; --spine:#6a6a6a;
-  --fam1s:#4fd17f; --fam2s:#ff5fa2; --fam3s:#5a8fe0; --fam4s:#ffc23d; --sig-audio:#3ec9bf; --sig-video:#ffb000;
-  --btn-shadow:none; --btn-shadow-dn:none;
-  --f-display:Futura,"Futura PT",Jost,"Century Gothic","Avenir Next",sans-serif; --f-body:Futura,"Futura PT",Jost,"Century Gothic","Avenir Next",sans-serif;
-  --body-size:16px; --body-stretch:100%; --body-wght:400; --lh:1.65; --name-wght:500; --name-stretch:100%; --head-stretch:100%;
-  color-scheme:dark;
-}
-/* Pastel (...Seeds) */
-:root[data-skin="pastel"]{
-  --bg:#d6dbe4; --panel:#f8f9fb; --panel2:#eef1f6; --ink:#232830; --muted:#5d6573; --dim:#d0d6e0; --on:#ffffff;
-  --soft:#e3962a; --alt:#22958d; --red:#cc3a2c; --line:#d0d6e0; --cloud:#f8f9fb; --cloud2:#c3cad8; --spine:#8b93a3;
-  --r:10px; --rb:6px; --cw:1px; --btn-shadow:none; --btn-shadow-dn:none;
-  --card-shadow:0 1px 0 rgba(255,255,255,.6) inset, 0 12px 26px -14px rgba(40,50,75,.45);
-  --f-display:"IBM Plex Sans Condensed","Arial Narrow",system-ui,sans-serif; --f-body:"IBM Plex Sans Condensed","Arial Narrow",system-ui,sans-serif;
-  --body-size:16px; --body-stretch:100%; --body-wght:400; --lh:1.6; --case:none; --name-wght:600; --name-stretch:100%; --head-stretch:100%;
+  --f-mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+  --body-size:14px; --lh:1.72;
   color-scheme:light;
 }
 
@@ -113,159 +63,131 @@
 [hidden]{display:none!important}
 html{scroll-behavior:smooth; scroll-padding-top:calc(env(safe-area-inset-top, 0px) + 64px)}
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
-body{margin:0; background:var(--bg); color:var(--ink); font-family:var(--f-body); font-size:var(--body-size); font-stretch:var(--body-stretch);
-  font-weight:var(--body-wght); line-height:var(--lh); -webkit-text-size-adjust:100%}
+body{margin:0; background:var(--bg); color:var(--ink); font-family:var(--f-mono); font-size:var(--body-size); font-weight:400;
+  line-height:var(--lh); -webkit-text-size-adjust:100%}
 body::before{content:""; position:fixed; inset:0 0 auto; height:env(safe-area-inset-top, 0px); z-index:10; background:var(--panel2)}
-a{color:inherit; text-decoration-color:var(--soft); text-decoration-thickness:1.5px; text-underline-offset:.2em}
+a{color:inherit; text-decoration-color:var(--soft); text-decoration-thickness:2px; text-underline-offset:.22em}
 a:hover{text-decoration-color:currentColor}
-strong,b{font-weight:600}
+strong,b{font-weight:700}
 :focus-visible{outline:2px solid var(--soft); outline-offset:3px}
 .wrap{max-width:1160px; margin:0 auto; padding-left:max(16px, env(safe-area-inset-left, 0px)); padding-right:max(16px, env(safe-area-inset-right, 0px))}
 .num{font-variant-numeric:tabular-nums}
 .sr{position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap}
 .linkrow{display:flex; flex-wrap:wrap; gap:12px 14px}
+.label{font-size:12px; letter-spacing:.1em; text-transform:uppercase; color:var(--muted)}
 
 /* areoles: the "..." at the start of a name, drawn as three cactus areoles (a dot with its spines) */
-.dots{display:inline-flex; gap:0; color:var(--soft); --ar-spine:var(--alt); margin-right:.02em; letter-spacing:0}
-.ar{width:.24em; height:.24em; display:block; overflow:visible; align-self:flex-end; margin-bottom:.01em}
-.name .ar{width:.2em; height:.2em}
+.dots{display:inline-flex; gap:0; color:var(--soft); --ar-spine:var(--ink); margin-right:.04em; letter-spacing:0}
+.ar{width:.26em; height:.26em; display:block; overflow:visible; align-self:flex-end; margin-bottom:.02em}
+.name .ar{width:.22em; height:.22em}
 .ar .sp{stroke:var(--ar-spine, currentColor)}
 
 /* ==========================================================================================
    3 TOP BAR
    ========================================================================================== */
 .top{position:sticky; top:env(safe-area-inset-top, 0px); z-index:20; background:var(--panel2); border-bottom:1px solid var(--line)}
-.top .wrap{display:flex; align-items:center; gap:14px; min-height:52px}
-.brand{font-family:var(--f-display); font-size:20px; font-weight:500; font-stretch:var(--head-stretch); letter-spacing:-.01em; text-decoration:none; white-space:nowrap; flex:none; display:inline-flex; align-items:baseline}
+.top .wrap{display:flex; align-items:center; gap:18px; min-height:52px}
+.brand{font-size:18px; font-weight:700; text-transform:uppercase; letter-spacing:.08em; text-decoration:none; white-space:nowrap; flex:none; display:inline-flex; align-items:baseline}
 .tabs{display:flex; gap:2px; overflow-x:auto; scrollbar-width:none; flex:1 1 auto; min-width:0}
 .tabs::-webkit-scrollbar{display:none}
-.tabs a{display:block; padding:16px 10px 13px; text-decoration:none; font-family:var(--f-grid); font-size:14px; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); white-space:nowrap}
+.tabs a{display:block; padding:16px 10px 13px; text-decoration:none; font-size:13px; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); white-space:nowrap}
 .tabs a:hover{color:var(--ink)}
-.tabs a.on{color:var(--ink); box-shadow:inset 0 -4px 0 var(--ink)}
-.skinwrap{position:relative; flex:none}
+.tabs a.on{color:var(--ink); font-weight:700; box-shadow:inset 0 -4px 0 var(--ink)}
 
 /* ==========================================================================================
    4 KEYS (buttons): outlined, with an offset block; pressed or "on" fills
    ========================================================================================== */
-.btn{display:inline-flex; align-items:center; gap:.5em; min-height:40px; padding:8px 14px; font:inherit; font-family:var(--f-grid); font-size:14px; font-stretch:normal;
-  letter-spacing:.05em; text-transform:var(--case); text-decoration:none; color:var(--ink); background:var(--bg); border:1px solid var(--line);
-  border-radius:var(--rb); box-shadow:var(--btn-shadow); cursor:pointer; transition:transform .06s, box-shadow .06s; white-space:nowrap; line-height:1.2}
+.btn{display:inline-flex; align-items:center; gap:.5em; min-height:40px; padding:8px 14px; font:inherit; font-size:13px; font-weight:500;
+  letter-spacing:.06em; text-transform:uppercase; text-decoration:none; color:var(--ink); background:var(--bg); border:1px solid var(--line);
+  border-radius:0; box-shadow:var(--btn-shadow); cursor:pointer; transition:transform .06s, box-shadow .06s; white-space:nowrap; line-height:1.2}
 .btn:hover{background:var(--panel2)}
 .btn:active,.btn.dn{transform:translate(3px,3px); box-shadow:var(--btn-shadow-dn)}
 .btn.on,.btn.fill{background:var(--ink); color:var(--on); border-color:var(--ink)}
 .btn.fill:hover{background:var(--muted); border-color:var(--muted)}
-.btn.small{min-height:34px; padding:5px 11px; font-size:13px}
+.btn.hot{background:var(--soft); color:var(--on-soft); border-color:var(--ink)}   /* the orange play key */
+.btn.hot:hover{background:#ff6a26}
+.btn.small{min-height:34px; padding:5px 11px; font-size:12px}
 .btn[disabled]{opacity:.45; pointer-events:none}
 .btn .arr{opacity:.8}
-:root[data-skin="pastel"] .btn{background:var(--panel2)}
-:root[data-skin="pastel"] .btn:hover{border-color:var(--muted)}
-:root[data-skin="pastel"] :is(.btn.fill,.btn.on){background:var(--ink); color:var(--on); border-color:var(--ink)}
-:root:is([data-skin="minimal"],[data-skin="minblack"]) .btn:hover{background:var(--ink); color:var(--on)}
 
 /* ==========================================================================================
-   5 SKIN MENU
-   ========================================================================================== */
-.menu{position:absolute; right:0; top:calc(100% + 8px); width:min(310px, calc(100vw - 32px)); background:var(--bg); border:1px solid var(--line);
-  border-radius:calc(var(--r) * .8); box-shadow:0 14px 30px -14px rgba(0,0,0,.35); padding:6px; z-index:30; font-stretch:normal}
-.menu h3{margin:6px 8px 4px; font-family:var(--f-grid); font-size:12px; font-weight:400; letter-spacing:.1em; text-transform:uppercase; color:var(--muted)}
-.menu button{display:flex; align-items:center; gap:10px; width:100%; padding:8px 10px; border:0; background:transparent; color:var(--ink);
-  font:inherit; font-size:14px; text-align:left; cursor:pointer; border-radius:calc(var(--rb) * .8); line-height:1.3}
-.menu button:hover{background:var(--panel2)}
-.menu button[aria-checked="true"]{background:var(--ink); color:var(--on)}
-.menu .sw{display:flex; gap:3px; flex:none}
-.menu .sw i{width:12px; height:12px; border-radius:50%; border:1px solid rgba(127,127,127,.45)}
-.menu small{display:block; opacity:.7; font-size:12px}
-
-/* ==========================================================================================
-   6 HERO & SKY: the canvas (#sky) draws the clouds and the crown behind the name
+   5 HERO & SKY: the canvas (#sky) draws the clouds and the crown behind the name
    ========================================================================================== */
 .hero{position:relative; overflow:hidden; padding-block:52px 120px; isolation:isolate}
 #sky{position:absolute; inset:0; width:100%; height:100%; z-index:-1; display:block}
 .hero-in{display:grid; grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr); gap:32px; align-items:center}
-.eyebrow{font-family:var(--f-grid); font-size:13px; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); margin:0 0 14px; font-stretch:normal}
-.eyebrow span + span::before{content:"·"; margin:0 .7em; color:var(--dim)}
-.name{font-family:var(--f-display); font-size:clamp(54px, 9.4vw, 122px); font-weight:var(--name-wght); font-stretch:var(--name-stretch);
-  line-height:.9; letter-spacing:-.035em; margin:0 0 22px; display:flex; align-items:baseline; flex-wrap:nowrap}
-.tagline{font-size:clamp(15px, 1.7vw, 17px); line-height:1.6; max-width:40ch; margin:0; text-wrap:pretty}
+.eyebrow{font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); margin:0 0 16px}
+.eyebrow span + span::before{content:"/"; margin:0 .8em; color:var(--soft)}
+.name{font-size:clamp(56px, 10vw, 132px); font-weight:800; text-transform:uppercase; line-height:.88; letter-spacing:-.02em;
+  margin:0 0 24px; display:flex; align-items:baseline; flex-wrap:nowrap}
+.tagline{font-size:clamp(14px, 1.6vw, 16px); line-height:1.65; max-width:40ch; margin:0; text-wrap:pretty}
 .hero-fig{min-height:360px}   /* an empty box: the crown is drawn into this spot on the canvas */
 
 /* ==========================================================================================
-   7 TRACKER: docked on the cloud deck, plays tracks exported from ...Thunder Plus
+   6 TRACKER: docked on the cloud deck, plays tracks rendered from ...Thunder Plus
    ========================================================================================== */
 .dock{position:relative; z-index:2; margin-top:-92px}
-.screen{background:var(--bg); border:1px solid var(--line); border-radius:var(--r); box-shadow:8px 8px 0 0 var(--cloud2), var(--card-shadow); font-family:var(--f-grid); font-stretch:normal; overflow:hidden}
-:root[data-skin="pastel"] .screen{box-shadow:var(--card-shadow)}
-:root:is([data-skin="minimal"],[data-skin="minblack"]) .screen{border-width:var(--cw); border-color:var(--sig-gate); box-shadow:none}
+.screen{background:var(--bg); border:1px solid var(--line); box-shadow:8px 8px 0 0 var(--cloud2); overflow:hidden}
 .scrbar{display:flex; align-items:center; gap:10px 18px; padding:10px 14px; border-bottom:1px solid var(--line); background:var(--panel2); flex-wrap:wrap}
 .scrbar .grp{display:flex; align-items:baseline; gap:8px; min-width:0}
-.scrbar .lbl{font-size:12px; letter-spacing:.1em; color:var(--muted); text-transform:uppercase}
-.scrbar .val{font-size:20px; line-height:1}
-.scrbar .ttl{font-size:18px; line-height:1.1; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:28ch}
-.scrbar select{font:inherit; font-size:16px; color:var(--ink); background:var(--bg); border:1px solid var(--line); border-radius:var(--rb); padding:5px 8px; max-width:min(60vw, 30ch)}
+.scrbar .val{font-size:19px; font-weight:700; line-height:1}
+.scrbar .ttl{font-size:16px; font-weight:700; line-height:1.1; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:28ch}
+.scrbar select{font:inherit; font-size:15px; color:var(--ink); background:var(--bg); border:1px solid var(--line); border-radius:0; padding:5px 8px; max-width:min(60vw, 30ch)}
 .scrbar .sp{flex:1 1 auto}
 .gridwrap{overflow-x:auto; overscroll-behavior-x:contain; position:relative}
-.tgrid{display:grid; font-size:14px; line-height:1; padding:4px 0 6px; min-width:100%; width:max-content}
+.tgrid{display:grid; font-size:13px; line-height:1; padding:4px 0 6px; min-width:100%; width:max-content}
 .tgrid > div{padding:4px 10px; white-space:nowrap}
-.tgrid .hd{position:sticky; top:0; color:var(--muted); font-size:12px; letter-spacing:.08em; text-transform:uppercase; padding-block:8px 7px; border-bottom:1px solid var(--dim); overflow:hidden; text-overflow:ellipsis}
+.tgrid .hd{position:sticky; top:0; color:var(--muted); font-size:11px; letter-spacing:.08em; text-transform:uppercase; padding-block:8px 7px; border-bottom:1px solid var(--dim); overflow:hidden; text-overflow:ellipsis}
 .tgrid .hd .tn{color:var(--dim); margin-right:.5em}
 .tgrid .rn{color:var(--muted); text-align:right; padding-right:8px; position:sticky; left:0; background:var(--bg); z-index:1}
-.tgrid .rn.q{color:var(--ink)}
+.tgrid .rn.q{color:var(--ink); font-weight:700}
 .tgrid .c{color:var(--dim)}            /* empty row */
 .tgrid .c.n{color:var(--ink)}          /* a note */
-.tgrid .c.poly{color:var(--alt)}       /* a note on a poly track */
+.tgrid .c.poly{color:var(--soft)}      /* a note on a poly track */
 .tgrid .c.off{color:var(--muted)}      /* note OFF */
 .tgrid .c.fx{color:var(--muted)}       /* a command without a note */
-.tgrid .b4{background:color-mix(in srgb, var(--panel2) 55%, transparent)}   /* every 4th row */
+.tgrid .b4{background:color-mix(in srgb, var(--panel2) 60%, transparent)}   /* every 4th row */
 .tgrid .pl{background:var(--ink)!important; color:var(--on)!important}       /* the playhead row */
-.tgrid .c.pl.hit{background:var(--soft)!important; color:var(--on)!important}
+.tgrid .c.pl.hit{background:var(--soft)!important; color:var(--on-soft)!important}
 .seekrow{position:relative; padding:10px 14px 6px; border-top:1px solid var(--dim)}
 .ticks{position:relative; height:8px; margin:0 8px}   /* one tick per song row */
 .ticks i{position:absolute; top:0; bottom:0; width:1px; background:var(--dim)}
-.ticks i.b{background:var(--muted)}
-#seek{width:100%; margin:2px 0 0; accent-color:var(--ink); height:22px; background:transparent}
-.scrfoot{display:flex; flex-wrap:wrap; gap:6px 16px; justify-content:space-between; padding:6px 14px 11px; font-size:12px; letter-spacing:.06em; color:var(--muted); line-height:1.4}
-.scrmsg{padding:28px 16px; color:var(--muted); font-size:14px; line-height:1.5}
-.studio{border-top:1px dashed var(--line); padding:12px 14px 14px; display:flex; flex-wrap:wrap; gap:10px 14px; align-items:center; font-size:13px; line-height:1.45; color:var(--muted)}
-.studio b{color:var(--ink); font-weight:400}
+.ticks i.b{background:var(--ink)}
+#seek{width:100%; margin:2px 0 0; accent-color:var(--soft); height:22px; background:transparent}
+.scrfoot{display:flex; flex-wrap:wrap; gap:6px 16px; justify-content:space-between; padding:6px 14px 11px; font-size:11px; letter-spacing:.06em; color:var(--muted); line-height:1.4}
+.scrmsg{padding:28px 16px; color:var(--muted); font-size:13px; line-height:1.5}
+.studio{border-top:1px dashed var(--line); padding:12px 14px 14px; display:flex; flex-wrap:wrap; gap:10px 14px; align-items:center; font-size:12px; line-height:1.45; color:var(--muted)}
+.studio b{color:var(--ink)}
 .screen.drag{outline:3px dashed var(--soft); outline-offset:4px}
 
 /* ==========================================================================================
-   8 SECTIONS & CARDS (shared by Bio, Music, Apps, Contact)
+   7 SECTIONS & CARDS (shared by Bio, Music, Apps, Contact)
    ========================================================================================== */
 section.sec{padding-block:34px}
 .sechead{display:flex; align-items:baseline; gap:14px; margin:0 0 18px; padding-bottom:9px; border-bottom:1px solid var(--line)}
-:root[data-skin="pastel"] .sechead{border-color:var(--muted)}
-.sechead h2{margin:0; font-family:var(--f-display); font-size:clamp(24px, 3.4vw, 32px); line-height:1.1; letter-spacing:.03em; font-stretch:var(--head-stretch); text-transform:var(--case); font-weight:500}
-.sechead .meta{font-family:var(--f-grid); font-size:13px; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); margin-left:auto; font-stretch:normal}
-.sec-bio{--ft:var(--fam1); --fe:var(--fam1e); --fs:var(--fam1s)}
-.sec-music{--ft:var(--fam2); --fe:var(--fam2e); --fs:var(--fam2s)}
-.sec-apps{--ft:var(--fam3); --fe:var(--fam3e); --fs:var(--fam3s)}
-.sec-contact{--ft:var(--fam4); --fe:var(--fam4e); --fs:var(--fam4s)}
-.card{background:var(--panel); border:var(--cw) solid var(--line); border-radius:var(--r); box-shadow:var(--card-shadow); padding:20px 22px; min-width:0}
-:root[data-skin="pastel"] .card{background:color-mix(in srgb, var(--ft) 55%, var(--panel)); border-color:var(--fe)}
-:root:is([data-skin="minimal"],[data-skin="minblack"]) .card{border-color:var(--fs)}
-:root[data-skin="minblack"] .card{background:#0b0b0d}
-.pill{display:inline-block; padding:3px 7px 2px; border:1px solid currentColor; border-radius:999px; font-family:var(--f-grid); font-size:11px; letter-spacing:.08em; line-height:1.2; text-transform:uppercase}
-:root:not([data-skin="pastel"],[data-skin="minimal"],[data-skin="minblack"]) .pill{border-radius:0}
+.sechead h2{margin:0; font-size:clamp(22px, 3vw, 30px); line-height:1.1; letter-spacing:.06em; text-transform:uppercase; font-weight:800}
+.sechead .meta{margin-left:auto}
+.card{background:var(--panel); border:1px solid var(--line); padding:20px 22px; min-width:0}
+.pill{display:inline-block; padding:3px 7px 2px; border:1px solid currentColor; font-size:10.5px; font-weight:700; letter-spacing:.08em; line-height:1.2; text-transform:uppercase}
 
 /* ==========================================================================================
-   9 BIO
+   8 BIO
    ========================================================================================== */
 .bio{display:grid; grid-template-columns:minmax(0,1fr); gap:26px}
 .bio.hasphoto{grid-template-columns:minmax(0,1fr) minmax(200px, 300px)}
 .bio .text p{margin:0 0 1em; max-width:66ch}
 .bio .text p:last-child{margin-bottom:0}
-.bio .text p:first-child{font-size:1.18em; line-height:1.55}
+.bio .text p:first-child{font-size:1.15em; line-height:1.55}
 @media (min-width:900px){
   .bio:not(.hasphoto) .text{columns:2 30ch; column-gap:48px}
-  .bio:not(.hasphoto) .text p:first-child{column-span:all; max-width:46ch; margin-bottom:1.3em}
+  .bio:not(.hasphoto) .text p:first-child{column-span:all; max-width:48ch; margin-bottom:1.3em}
   .bio:not(.hasphoto) .text p{break-inside:avoid-column}
 }
 .bio figure{margin:0; align-self:start}
-.bio figure img{display:block; width:100%; max-width:100%; height:auto; border:1px solid var(--line); border-radius:var(--r)}
+.bio figure img{display:block; width:100%; max-width:100%; height:auto; border:1px solid var(--line)}
 
 /* ==========================================================================================
-   10 MUSIC
+   9 MUSIC
    The intro text, the line above the cards, then one card per release (built by renderMusic
    and releaseCard in the script). Card, top to bottom:
      .art   the cover: Bandcamp art, a drawn crown when there's no art, or the Bandcamp player
@@ -273,58 +195,54 @@ section.sec{padding-block:34px}
      h3     the title
      .acts  "▶ Play here" (opens the Bandcamp player in the card) and the Bandcamp link
    Columns: 4 on wide screens, 3 under 1000px, 2 under 860px, 1 (a compact row) under 440px;
-   change them here and in 14 NARROW SCREENS.
+   change them here and in 13 NARROW SCREENS.
    ========================================================================================== */
 .intro{max-width:66ch; margin:0 0 6px}
-.listen{font-family:var(--f-display); font-style:italic; font-weight:600; font-size:17px; margin:14px 0 16px}
+.listen{font-style:italic; font-weight:700; font-size:16px; margin:14px 0 16px}
 .grid{display:grid; gap:18px}
 .releases{grid-template-columns:repeat(4, minmax(0,1fr))}
 .rel{display:flex; flex-direction:column; gap:11px; padding:12px 12px 14px}
-.rel .art{position:relative; aspect-ratio:1; width:100%; max-width:100%; border:1px solid var(--line); border-radius:calc(var(--r) * .6); overflow:hidden; background:var(--bg)}
+.rel .art{position:relative; aspect-ratio:1; width:100%; max-width:100%; border:1px solid var(--line); overflow:hidden; background:var(--bg)}
 .rel .art img,.rel .art canvas{display:block; width:100%; height:100%; object-fit:cover}
 .rel .art.bc{aspect-ratio:auto; height:120px; border:0; background:transparent}   /* the Bandcamp player, once opened */
 .rel .art.bc iframe{border:0; width:100%; height:120px; display:block}
-.rel .row1, .app .row1{display:flex; align-items:center; gap:8px; font-family:var(--f-grid); font-size:12px; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); font-stretch:normal}
+.rel .row1, .app .row1{display:flex; align-items:center; gap:8px; font-size:11px; letter-spacing:.08em; text-transform:uppercase; color:var(--muted)}
 .rel .row1 .yr{margin-left:auto}
 .pill.album{color:var(--ink)} .pill.track,.pill.ep{color:var(--alt)}
-.rel h3{margin:0 2px; font-family:var(--f-display); font-size:16px; line-height:1.3; font-weight:500; text-wrap:balance; overflow-wrap:anywhere}
+.rel h3{margin:0 2px; font-size:15px; line-height:1.3; font-weight:700; text-wrap:balance; overflow-wrap:anywhere}
 .rel .acts{margin-top:auto; display:flex; flex-wrap:wrap; gap:10px; padding-top:4px}
 
 /* ==========================================================================================
-   11 APPS
+   10 APPS
    ========================================================================================== */
 .apps{grid-template-columns:repeat(2, minmax(0,1fr))}
 .app{display:flex; flex-direction:column; gap:10px; padding:20px 22px 22px}
-.app h3{margin:0; font-family:var(--f-display); font-size:clamp(22px, 2.6vw, 28px); line-height:1.1; font-weight:400; font-stretch:var(--head-stretch); letter-spacing:-.02em; display:flex; align-items:baseline}
+.app h3{margin:0; font-size:clamp(20px, 2.4vw, 26px); line-height:1.1; font-weight:800; letter-spacing:-.01em; display:flex; align-items:baseline}
 .app p{margin:0; max-width:52ch}
-.app .host{font-family:var(--f-grid); font-size:12px; color:var(--muted); overflow-wrap:anywhere; font-stretch:normal}
+.app .host{font-size:11px; color:var(--muted); overflow-wrap:anywhere}
 .app .go{margin-top:auto; display:flex; flex-wrap:wrap; gap:10px; padding-top:4px}
-.pill.audio{color:var(--sig-audio)} .pill.video{color:var(--sig-video)} .pill.sleep{color:var(--sig-mod)}
-:root:is([data-skin="cloud"],[data-skin="cloudnight"],[data-skin="plum"],[data-skin="night"]) .pill.audio{color:var(--alt)}
-:root:is([data-skin="cloud"],[data-skin="cloudnight"],[data-skin="plum"],[data-skin="night"]) .pill.video{color:var(--soft)}
-:root:is([data-skin="cloud"],[data-skin="cloudnight"],[data-skin="plum"],[data-skin="night"]) .pill.sleep{color:var(--muted)}
+.pill.audio{color:var(--alt)} .pill.video{color:var(--soft)} .pill.sleep{color:var(--muted)}
 
 /* ==========================================================================================
-   12 CONTACT
+   11 CONTACT
    ========================================================================================== */
 .contact{display:grid; grid-template-columns:minmax(0,1.2fr) minmax(0,1fr); gap:26px; align-items:center}
-.contact .say{font-family:var(--f-display); font-size:clamp(22px, 3.2vw, 34px); line-height:1.25; margin:0; text-wrap:balance; font-weight:300; font-stretch:var(--head-stretch)}
+.contact .say{font-size:clamp(20px, 3vw, 32px); line-height:1.25; margin:0; text-wrap:balance; font-weight:700}
 .contact .acts{display:flex; flex-direction:column; gap:14px; align-items:flex-start}
-.email{display:flex; gap:10px; align-items:center; flex-wrap:wrap; font-family:var(--f-grid)}
+.email{display:flex; gap:10px; align-items:center; flex-wrap:wrap}
 .email code{font:inherit; user-select:all; overflow-wrap:anywhere}
 
 /* ==========================================================================================
-   13 FOOTER (and the little toast message)
+   12 FOOTER (and the little toast message)
    ========================================================================================== */
-footer{padding-block:34px 44px; color:var(--muted); font-family:var(--f-grid); font-size:13px; font-stretch:normal}
+footer{padding-block:34px 44px; color:var(--muted); font-size:12px}
 footer .fin{display:flex; flex-wrap:wrap; gap:8px 20px; justify-content:space-between; border-top:1px solid var(--line); padding-top:16px}
-:root[data-skin="pastel"] footer .fin{border-color:var(--muted)}
 .toast{position:fixed; left:50%; bottom:calc(env(safe-area-inset-bottom, 0px) + 20px); transform:translateX(-50%); background:var(--ink); color:var(--on);
-  padding:8px 14px; border-radius:999px; font-family:var(--f-grid); font-size:13px; z-index:40}
+  padding:8px 14px; font-size:12px; z-index:40}
 .loaderr{padding:20px; border:1px dashed var(--line); margin-block:20px}
 
 /* ==========================================================================================
-   14 NARROW SCREENS
+   13 NARROW SCREENS
    ========================================================================================== */
 @media (max-width:1000px){ .releases{grid-template-columns:repeat(3, minmax(0,1fr))} }
 @media (max-width:860px){
@@ -338,15 +256,13 @@ footer .fin{display:flex; flex-wrap:wrap; gap:8px 20px; justify-content:space-be
 }
 @media (max-width:640px){
   .apps{grid-template-columns:minmax(0,1fr)}
-  .top .wrap{gap:6px}
-  .brand{font-size:17px}
-  .tabs a{padding-inline:7px; font-size:13px}
-  .skinbtn .lbltxt{display:none}
+  .top .wrap{gap:8px}
+  .brand{font-size:16px}
+  .tabs a{padding-inline:7px; font-size:12px}
   .scrbar .ttl{max-width:16ch}
   .tgrid > div{padding-inline:7px}
 }
 @media (max-width:440px){
-  .tabs a[href="#listen"]{display:none}
   .tabs a{padding-inline:6px; letter-spacing:.06em}
   /* MUSIC: one release per row, small cover on the left */
   .releases{grid-template-columns:minmax(0,1fr)}
@@ -366,7 +282,7 @@ footer .fin{display:flex; flex-wrap:wrap; gap:8px 20px; justify-content:space-be
   </symbol>
 </svg>
 
-<!-- ===== TOP BAR: name, section tabs, Skin menu ===== -->
+<!-- ===== TOP BAR: name and section tabs ===== -->
 <header class="top">
   <div class="wrap">
     <a class="brand" href="#top" id="brand" aria-label="wake">wake</a>
@@ -377,10 +293,6 @@ footer .fin{display:flex; flex-wrap:wrap; gap:8px 20px; justify-content:space-be
       <a href="#apps">Apps</a>
       <a href="#contact">Contact</a>
     </nav>
-    <div class="skinwrap">
-      <button class="btn small skinbtn" id="skinBtn" aria-haspopup="true" aria-expanded="false"><span class="lbltxt">Skin</span> ▾</button>
-      <div class="menu" id="skinMenu" role="menu" hidden></div>
-    </div>
   </div>
 </header>
 
@@ -392,7 +304,7 @@ footer .fin{display:flex; flex-wrap:wrap; gap:8px 20px; justify-content:space-be
       <div>
         <p class="eyebrow" id="eyebrow"><span>Santa Fe, NM</span><span>35.687°N 105.938°W</span></p>
         <h1 class="name" id="siteName" aria-label="wake">wake</h1>
-        <p class="tagline" id="tagline">Electronic music and hip hop beats by Matthew Hettich, a.k.a. WAKE.</p>
+        <p class="tagline" id="tagline">Electronic music by Matthew Hettich.</p>
       </div>
       <div class="hero-fig" id="fig" aria-hidden="true"></div>
     </div>
@@ -404,12 +316,12 @@ footer .fin{display:flex; flex-wrap:wrap; gap:8px 20px; justify-content:space-be
     <div class="wrap">
       <div class="screen" id="screen">
         <div class="scrbar">
-          <div class="grp"><span class="lbl">Track</span><span class="ttl" id="trackTtl">Loading…</span><select id="trackSel" aria-label="Choose a track" hidden></select></div>
+          <div class="grp"><span class="label">Track</span><span class="ttl" id="trackTtl">Loading…</span><select id="trackSel" aria-label="Choose a track" hidden></select></div>
           <span class="sp"></span>
-          <div class="grp"><span class="lbl">BPM</span><span class="val num" id="bpm">--</span></div>
-          <div class="grp"><span class="lbl">Row</span><span class="val num" id="srow">--</span></div>
-          <div class="grp"><span class="val num" id="clock">0:00</span><span class="lbl num" id="dur">/ 0:00</span></div>
-          <button class="btn small" id="play" aria-pressed="false" disabled>▶ Play</button>
+          <div class="grp"><span class="label">BPM</span><span class="val num" id="bpm">--</span></div>
+          <div class="grp"><span class="label">Row</span><span class="val num" id="srow">--</span></div>
+          <div class="grp"><span class="val num" id="clock">0:00</span><span class="label num" id="dur">/ 0:00</span></div>
+          <button class="btn small hot" id="play" aria-pressed="false" disabled>▶ Play</button>
         </div>
         <div class="gridwrap"><div class="tgrid num" id="tgrid"></div></div>
         <div class="seekrow"><div class="ticks" id="ticks"></div><input type="range" id="seek" min="0" max="1000" step="1" value="0" aria-label="Position in the track"></div>
@@ -424,7 +336,7 @@ footer .fin{display:flex; flex-wrap:wrap; gap:8px 20px; justify-content:space-be
   </section>
 
   <!-- ===== BIO: content.json "bio" (paragraphs, optional photo) ===== -->
-  <section class="sec sec-bio" id="bio">
+  <section class="sec" id="bio">
     <div class="wrap">
       <div class="sechead"><h2>Bio</h2></div>
       <div class="card bio" id="bioBody"></div>
@@ -437,11 +349,11 @@ footer .fin{display:flex; flex-wrap:wrap; gap:8px 20px; justify-content:space-be
          listenLabel  → #listenLabel (the line above the cards)
          releases     → #releases, one card per release, in the order listed
        The cards are built in the script by renderMusic() and releaseCard(); their styles are
-       under "10 MUSIC" in the STYLE block.
+       under "9 MUSIC" in the STYLE block.
        ===================================================================================== -->
-  <section class="sec sec-music" id="music">
+  <section class="sec" id="music">
     <div class="wrap">
-      <div class="sechead"><h2>Music</h2><span class="meta num" id="musicMeta"></span></div>
+      <div class="sechead"><h2>Music</h2><span class="meta label num" id="musicMeta"></span></div>
       <p class="intro" id="musicIntro"></p>
       <p class="listen" id="listenLabel"></p>
       <div class="grid releases" id="releases"></div>
@@ -449,15 +361,15 @@ footer .fin{display:flex; flex-wrap:wrap; gap:8px 20px; justify-content:space-be
   </section>
 
   <!-- ===== APPS: content.json "apps" ===== -->
-  <section class="sec sec-apps" id="apps">
+  <section class="sec" id="apps">
     <div class="wrap">
-      <div class="sechead"><h2>Apps</h2><span class="meta num" id="appsMeta"></span></div>
+      <div class="sechead"><h2>Apps</h2><span class="meta label num" id="appsMeta"></span></div>
       <div class="grid apps" id="appsGrid"></div>
     </div>
   </section>
 
   <!-- ===== CONTACT: content.json "contact", plus the "links" buttons ===== -->
-  <section class="sec sec-contact" id="contact">
+  <section class="sec" id="contact">
     <div class="wrap">
       <div class="sechead"><h2>Contact</h2></div>
       <div class="card contact">
@@ -472,7 +384,7 @@ footer .fin{display:flex; flex-wrap:wrap; gap:8px 20px; justify-content:space-be
 <footer>
   <div class="wrap"><div class="fin">
     <span id="foot1">© Matthew Hettich</span>
-    <span>Skins from ...Thunder Plus and ...Seeds</span>
+    <span>IDM skin from ...Thunder Plus</span>
   </div></div>
 </footer>
 
@@ -486,24 +398,20 @@ footer .fin{display:flex; flex-wrap:wrap; gap:8px 20px; justify-content:space-be
      A HELPERS
      ======================================================================================== */
   const $ = (id) => document.getElementById(id);
-  const store = {   // browser storage, for the chosen skin only; works without it
-    get(k){ try { return localStorage.getItem(k); } catch(e){ return null; } },
-    set(k,v){ try { localStorage.setItem(k,v); } catch(e){} }
-  };
   const reduceMotion = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch(e){ return false; } })();
   const hex2 = (n) => (n >>> 0).toString(16).toUpperCase().padStart(2, '0');
   let toastTimer;
   function toast(msg){ const t = $('toast'); t.textContent = msg; t.hidden = false; clearTimeout(toastTimer); toastTimer = setTimeout(() => t.hidden = true, 2600); }
 
   /* ========================================================================================
-     B COLOURS: the current skin's tokens, read from the CSS, for the canvas drawings
+     B COLOURS: the tokens from "1 TOKENS", read from the CSS for the canvas drawings
      ======================================================================================== */
   function hexRGB(s){
     s = (s || '').trim();
     if (s[0] === '#'){ if (s.length === 4) s = '#' + s[1] + s[1] + s[2] + s[2] + s[3] + s[3]; const n = parseInt(s.slice(1, 7), 16); return [n >> 16 & 255, n >> 8 & 255, n & 255]; }
     const m = s.match(/\d+(\.\d+)?/g); return m ? m.slice(0, 3).map(Number) : [0, 0, 0];
   }
-  let COL = {};
+  const COL = {};
   function readColours(){
     const cs = getComputedStyle(document.documentElement);
     for (const k of ['bg','panel','panel2','ink','muted','dim','on','soft','alt','cloud','cloud2','spine','line']) COL[k] = hexRGB(cs.getPropertyValue('--' + k));
@@ -512,48 +420,7 @@ footer .fin{display:flex; flex-wrap:wrap; gap:8px 20px; justify-content:space-be
   const hexOf = (c) => c.map(v => v.toString(16).padStart(2, '0')).join('');
 
   /* ========================================================================================
-     C SKINS: the Skin menu. Add a skin here AND as a :root[data-skin="…"] block in the CSS.
-     ======================================================================================== */
-  const SKINS = [
-    {id:'cloud', name:'Simple cloud', from:'this site', dots:['#eceff6','#4b2448','#cf5f98','#4d7a5b']},
-    {id:'cloudnight', name:'Simple cloud night', from:'this site', dots:['#151729','#ecdaf2','#ff88be','#8dc89b']},
-    {id:'plum', name:'Simple plum', from:'...Thunder Plus', dots:['#f3e5ef','#6b2d5c','#c78ab6','#3e6e4c']},
-    {id:'night', name:'Simple night', from:'...Thunder Plus', dots:['#14182b','#f0b43c','#ffd884','#7fb6e6']},
-    {id:'minimal', name:'Minimal', from:'...Seeds', dots:['#ffffff','#efefef','#111111','#2f6fc7']},
-    {id:'minblack', name:'Minimal black', from:'...Seeds', dots:['#000000','#1a1a1a','#ffffff','#5a8fe0']},
-    {id:'pastel', name:'Pastel', from:'...Seeds', dots:['#d6dbe4','#deedf9','#f9f5de','#f9dee5']}
-  ];
-  let siteDefault = 'auto';   // content.json site.defaultSkin; "auto" follows the device's light/dark setting
-  const autoSkin = () => { try { return matchMedia('(prefers-color-scheme: dark)').matches ? 'cloudnight' : 'cloud'; } catch(e){ return 'cloud'; } };
-  const wantedSkin = () => store.get('wake-skin') || (siteDefault === 'auto' ? autoSkin() : siteDefault);
-  function setSkin(id, save){
-    if (!SKINS.some(s => s.id === id)) id = 'cloud';
-    document.documentElement.setAttribute('data-skin', id);
-    if (save) store.set('wake-skin', id);
-    $('skinMenu').querySelectorAll('button').forEach(b => b.setAttribute('aria-checked', String(b.dataset.skin === id)));
-    readColours();
-    Sky.recolour(); Covers.redraw();
-  }
-  function buildSkinMenu(){
-    const m = $('skinMenu');
-    m.innerHTML = '<h3>Skin</h3>';
-    SKINS.forEach(s => {
-      const b = document.createElement('button');
-      b.type = 'button'; b.setAttribute('role','menuitemradio'); b.dataset.skin = s.id;
-      b.innerHTML = '<span class="sw">' + s.dots.map(c => '<i style="background:' + c + '"></i>').join('') + '</span><span>' + s.name + '<small>from ' + s.from + '</small></span>';
-      b.addEventListener('click', () => { setSkin(s.id, true); closeMenu(); });
-      m.appendChild(b);
-    });
-  }
-  function openMenu(){ $('skinMenu').hidden = false; $('skinBtn').setAttribute('aria-expanded','true'); $('skinBtn').classList.add('on'); }
-  function closeMenu(){ $('skinMenu').hidden = true; $('skinBtn').setAttribute('aria-expanded','false'); $('skinBtn').classList.remove('on'); }
-  $('skinBtn').addEventListener('click', (e) => { e.stopPropagation(); $('skinMenu').hidden ? openMenu() : closeMenu(); });
-  document.addEventListener('click', (e) => { if (!$('skinMenu').hidden && !e.target.closest('.skinwrap')) closeMenu(); });
-  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeMenu(); });
-  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => { if (!store.get('wake-skin') && siteDefault === 'auto') setSkin(autoSkin(), false); }); } catch(e){}
-
-  /* ========================================================================================
-     D CROWN: areoles on the golden angle, as on a barrel cactus seen from above.
+     C CROWN: areoles on the golden angle, as on a barrel cactus seen from above.
      Used for the big crown in the hero (it lights up with the tracker) and for release
      covers that have no art.
      ======================================================================================== */
@@ -561,7 +428,7 @@ footer .fin{display:flex; flex-wrap:wrap; gap:8px 20px; justify-content:space-be
   function crown(ctx, cx, cy, R, o){
     const N = o.N || 320, sp = o.spines || 4, rot = o.rot || 0, E = o.energy, L = o.lanes || 1, s = o.scale || 1;
     const off = Math.max(4, R * 0.045);
-    // the disc and its offset outline (the Simple skins' offset block)
+    // the disc and its offset outline (the keys' offset block)
     ctx.lineWidth = 1.5 * s;
     ctx.beginPath(); ctx.arc(cx + off, cy + off, R, 0, Math.PI * 2); ctx.strokeStyle = rgba(COL.dim); ctx.stroke();
     ctx.beginPath(); ctx.arc(cx, cy, R, 0, Math.PI * 2); ctx.fillStyle = rgba(COL.panel); ctx.fill(); ctx.strokeStyle = rgba(COL.line); ctx.stroke();
@@ -582,7 +449,7 @@ footer .fin{display:flex; flex-wrap:wrap; gap:8px 20px; justify-content:space-be
     // areoles
     ctx.beginPath();
     for (const p of pts){ ctx.moveTo(p.x + p.sz, p.y); ctx.arc(p.x, p.y, p.sz, 0, Math.PI * 2); }
-    ctx.fillStyle = rgba(COL.ink, 0.82); ctx.fill();
+    ctx.fillStyle = rgba(COL.ink, 0.85); ctx.fill();
     // blooms: each tracker lane that just played lights its own arm of the spiral
     if (E){
       for (let i = 0; i < L; i++){
@@ -597,7 +464,7 @@ footer .fin{display:flex; flex-wrap:wrap; gap:8px 20px; justify-content:space-be
   }
 
   /* ========================================================================================
-     E SKY: the hero's canvas. An ordered-dither cloud deck drifting under the crown.
+     D SKY: the hero's canvas. An ordered-dither cloud deck drifting under the crown.
      Sky.flash(lane, lanes, level) is called by the tracker on every note.
      Turns itself off when the hero is scrolled away, the tab is hidden, or the visitor
      asks for less motion (then it draws one still frame).
@@ -684,17 +551,15 @@ footer .fin{display:flex; flex-wrap:wrap; gap:8px 20px; justify-content:space-be
     let resizeTimer; new ResizeObserver(() => { clearTimeout(resizeTimer); resizeTimer = setTimeout(size, 60); }).observe(hero);
     return {
       init(){ size(); start(); },
-      recolour(){ if (W) frame(performance.now(), true); },
       flash(i, n, v){ lanes = Math.max(1, Math.min(32, n)); if (i < 32) energy[i] = Math.max(energy[i], v); if (reduceMotion && W) frame(performance.now(), true); }
     };
   })();
 
   /* ========================================================================================
-     F COVERS: a crown drawn from a release's title, for releases with no cover art
-     (or when the art can't load). Redrawn when the skin changes.
+     E COVERS: a crown drawn from a release's title, for releases with no cover art
+     (or when the art can't load)
      ======================================================================================== */
   const Covers = (() => {
-    const list = [];
     function hash(s){ let h = 2166136261; for (let i = 0; i < s.length; i++){ h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); } return h >>> 0; }
     function draw(cv, title){
       const box = cv.parentElement.getBoundingClientRect(), dpr = Math.min(2, window.devicePixelRatio || 1);
@@ -712,14 +577,11 @@ footer .fin{display:flex; flex-wrap:wrap; gap:8px 20px; justify-content:space-be
       const blooms = []; for (let i = 0; i < 2 + (H >>> 5) % 4; i++) blooms.push(((H >>> (i * 3)) % 23) + i * 7);
       crown(c, w * (0.45 + ((H >> 3) % 10) / 100), h * 0.44, R, {N:Math.round(R * 2.2), spines:sp, rot:(H % 628) / 100, scale:0.8, blooms});
     }
-    return {
-      add(cv, title){ list.push([cv, title]); requestAnimationFrame(() => draw(cv, title)); },
-      redraw(){ for (const [cv, t] of list) if (cv.isConnected) draw(cv, t); }
-    };
+    return { add(cv, title){ requestAnimationFrame(() => draw(cv, title)); } };
   })();
 
   /* ========================================================================================
-     G TEXT HELPERS: tiny markdown ([text](url), **bold**, *italic*), link buttons, and the
+     F TEXT HELPERS: tiny markdown ([text](url), **bold**, *italic*), link buttons, and the
      areole dots for names that start with "..."
      ======================================================================================== */
   const esc = (s) => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -744,7 +606,7 @@ footer .fin{display:flex; flex-wrap:wrap; gap:8px 20px; justify-content:space-be
   }
 
   /* ========================================================================================
-     H CONTENT: fills the page from content.json, one function per section.
+     G CONTENT: fills the page from content.json, one function per section.
      ======================================================================================== */
   function render(c){
     renderHero(c.site || {});
@@ -757,7 +619,7 @@ footer .fin{display:flex; flex-wrap:wrap; gap:8px 20px; justify-content:space-be
     requestAnimationFrame(() => Sky.init());
   }
 
-  /* ---- HERO: content.json "site" ---- */
+  /* ---- HERO: content.json "site" (name, title, tagline, location, coords) ---- */
   function renderHero(site){
     if (site.title) document.title = site.title;
     if (site.name){
@@ -766,7 +628,6 @@ footer .fin{display:flex; flex-wrap:wrap; gap:8px 20px; justify-content:space-be
     }
     $('eyebrow').innerHTML = [site.location, site.coords, site.label].filter(Boolean).map(s => '<span>' + esc(s) + '</span>').join('');
     if (site.tagline) $('tagline').innerHTML = md(site.tagline);
-    if (site.defaultSkin){ siteDefault = site.defaultSkin; if (!store.get('wake-skin')) setSkin(wantedSkin(), false); }
   }
 
   /* ---- BIO: content.json "bio" ---- */
@@ -794,9 +655,9 @@ footer .fin{display:flex; flex-wrap:wrap; gap:8px 20px; justify-content:space-be
     rels.forEach((r, i) => grid.appendChild(releaseCard(r, i)));
   }
 
-  // Bandcamp players show on the real site (wake.mobi, github.io, your own computer), not in previews
-  // that can't load other websites; there the card keeps just its Bandcamp link.
-  const canEmbed = /(^|\.)wake\.mobi$|\.github\.io$|^localhost$|^127\.0\.0\.1$/.test(location.hostname);
+  // Bandcamp players show on the real site (any web address), not in Claude's preview, which
+  // can't load other websites; there the card keeps just its Bandcamp link.
+  const canEmbed = !/claude|anthropic/i.test(location.hostname) && /^https?:$/.test(location.protocol);
 
   /* One release card. Fields of a release in content.json:
        title  the name on the card
@@ -820,15 +681,15 @@ footer .fin{display:flex; flex-wrap:wrap; gap:8px 20px; justify-content:space-be
     meta.innerHTML = '<div class="row1"><span class="num">' + hex2(i + 1) + '</span><span class="pill ' + esc(type) + '">' + esc(type) + '</span>' +
       (r.year ? '<span class="yr num">' + esc(r.year) + '</span>' : '') + '</div><h3>' + esc(r.title) + '</h3>';
 
-    // .acts: "▶ Play here" swaps the cover for Bandcamp's player (coloured from the skin), then the Bandcamp link
+    // .acts: "▶ Play here" swaps the cover for Bandcamp's player (in the skin's colours), then the Bandcamp link
     const acts = document.createElement('div'); acts.className = 'acts';
     const embed = (r.embed || '').trim();
     if (embed && canEmbed && /^(album|track)=\d+$/.test(embed)){
-      const b = document.createElement('button'); b.type = 'button'; b.className = 'btn small fill'; b.textContent = '▶ Play here';
+      const b = document.createElement('button'); b.type = 'button'; b.className = 'btn small hot'; b.textContent = '▶ Play here';
       b.addEventListener('click', () => {
         const f = document.createElement('iframe');
         f.title = (r.title || 'Release') + ' on Bandcamp'; f.loading = 'lazy'; f.setAttribute('seamless', '');
-        f.src = 'https://bandcamp.com/EmbeddedPlayer/' + embed + '/size=large/bgcol=' + hexOf(COL.panel) + '/linkcol=' + hexOf(COL.ink) + '/tracklist=false/artwork=small/transparent=true/';
+        f.src = 'https://bandcamp.com/EmbeddedPlayer/' + embed + '/size=large/bgcol=' + hexOf(COL.panel) + '/linkcol=' + hexOf(COL.soft) + '/tracklist=false/artwork=small/transparent=true/';
         art.className = 'art bc'; art.innerHTML = ''; art.appendChild(f); b.remove();
       });
       acts.appendChild(b);
@@ -871,7 +732,7 @@ footer .fin{display:flex; flex-wrap:wrap; gap:8px 20px; justify-content:space-be
   function selectText(el){ try { const r = document.createRange(); r.selectNodeContents(el); const s = getSelection(); s.removeAllRanges(); s.addRange(r); toast('Selected. Copy it from here.'); } catch(e){} }
 
   /* ========================================================================================
-     I AUDIO: a streamed <audio> element, or decoded Web Audio when the element can't play
+     H AUDIO: a streamed <audio> element, or decoded Web Audio when the element can't play
      the file. Same controls either way: play, pause, seek, time.
      ======================================================================================== */
   function AudioSrc(url){
@@ -916,7 +777,7 @@ footer .fin{display:flex; flex-wrap:wrap; gap:8px 20px; justify-content:space-be
   }
 
   /* ========================================================================================
-     J TRACKER PLAYER: lanes from a ...Thunder Plus web export (.json), scrolled in time with
+     I TRACKER PLAYER: lanes from a ...Thunder Plus web export (.json), scrolled in time with
      its render (.mp3). The export format is described in tools/thunder-web-export.js.
      ======================================================================================== */
   const Player = (() => {
@@ -983,7 +844,8 @@ footer .fin{display:flex; flex-wrap:wrap; gap:8px 20px; justify-content:space-be
       if (!dragging && durMs) seek.value = Math.round(ms / durMs * 1000);
     }
     function tick(){ raf = 0; if (!playing || !au) return; paint(au.time() * 1000); raf = requestAnimationFrame(tick); }
-    function setBtn(){ btn.textContent = playing ? '■ Stop' : '▶ Play'; btn.classList.toggle('on', playing); btn.setAttribute('aria-pressed', String(playing)); }
+    // the play key: orange to play, black while playing
+    function setBtn(){ btn.textContent = playing ? '■ Stop' : '▶ Play'; btn.classList.toggle('on', playing); btn.classList.toggle('hot', !playing); btn.setAttribute('aria-pressed', String(playing)); }
     async function play(){
       if (!au) return;
       try { playing = true; setBtn(); const ok = await au.play(); if (ok === false){ playing = false; setBtn(); return; } raf = requestAnimationFrame(tick); }
@@ -1042,12 +904,12 @@ footer .fin{display:flex; flex-wrap:wrap; gap:8px 20px; justify-content:space-be
     scr.addEventListener('drop', (e) => { if (location.hash !== '#studio') return; e.preventDefault(); scr.classList.remove('drag'); takeFiles(e.dataTransfer.files); });
 
     return {
-      setTracks(list){ studioOn(); tracks = list.filter(t => t && (t.data || t.json)); fillSelect(); if (tracks.length) load(tracks[0]); else { $('trackTtl').textContent = 'No tracks yet'; msg('Tracks you export from ...Thunder Plus show up here.'); } }
+      setTracks(list){ studioOn(); tracks = list.filter(t => t && (t.data || t.json)); fillSelect(); if (tracks.length) load(tracks[0]); else { $('trackTtl').textContent = 'No tracks yet'; msg('Tracks rendered from ...Thunder Plus show up here.'); } }
     };
   })();
 
   /* ========================================================================================
-     K NAV TABS: underline the section on screen
+     J NAV TABS: underline the section on screen
      ======================================================================================== */
   const tabs = Array.from(document.querySelectorAll('#tabs a'));
   if ('IntersectionObserver' in window){
@@ -1056,10 +918,9 @@ footer .fin{display:flex; flex-wrap:wrap; gap:8px 20px; justify-content:space-be
   }
 
   /* ========================================================================================
-     L START: pick the skin, then load content.json and fill the page
+     K START: read the colours, then load content.json and fill the page
      ======================================================================================== */
-  buildSkinMenu();
-  setSkin(wantedSkin(), false);
+  readColours();
   fetch('content.json', {cache:'no-cache'})
     .then(r => { if (!r.ok) throw new Error(r.status); return r.json(); })
     .then(render)

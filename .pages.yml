@@ -28,12 +28,6 @@ content:
           - { name: tagline, label: Tagline, type: text }
           - { name: location, label: Location, type: string }
           - { name: coords, label: Coordinates, type: string }
-          - name: defaultSkin
-            label: Default skin
-            description: auto picks Simple cloud, or Simple cloud night when the visitor's device is in dark mode.
-            type: select
-            options:
-              values: [auto, cloud, cloudnight, plum, night, minimal, minblack, pastel]
 
       - name: links
         label: Links (top of the page and in Contact)

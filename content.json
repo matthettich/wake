@@ -1,11 +1,10 @@
 {
   "site": {
     "name": "...wake",
-    "title": "WAKE · electronic music and hip hop beats by Matthew Hettich",
-    "tagline": "Electronic music and hip hop beats by Matthew Hettich, a.k.a. WAKE.",
+    "title": "WAKE · electronic music by Matthew Hettich",
+    "tagline": "Electronic music by Matthew Hettich.",
     "location": "Santa Fe, NM",
-    "coords": "35.687°N 105.938°W",
-    "defaultSkin": "auto"
+    "coords": "35.687°N 105.938°W"
   },
   "links": [
     {
