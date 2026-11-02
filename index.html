@@ -735,6 +735,18 @@ footer .fin{display:flex; flex-wrap:wrap; gap:8px 20px; justify-content:space-be
      H AUDIO: a streamed <audio> element, or decoded Web Audio when the element can't play
      the file. Same controls either way: play, pause, seek, time.
      ======================================================================================== */
+  // Safari only lets sound start from a tap, and only from code that runs right in it, before anything waits.
+  // So the tap that presses Play wakes one shared AudioContext here (and, on an iPhone, asks for playback even
+  // with the silent switch on); the Web Audio path below reuses it.
+  let sharedAC = null;
+  function audioCtx(){ if (!sharedAC){ const AC = window.AudioContext || window.webkitAudioContext; if (AC) sharedAC = new AC(); } return sharedAC; }
+  function unlockAudio(){
+    try { if (navigator.audioSession) navigator.audioSession.type = 'playback'; } catch(e){}
+    const ac = audioCtx(); if (!ac) return;
+    if (ac.state !== 'running') ac.resume().catch(() => {});
+    try { const b = ac.createBuffer(1, 1, 22050), src = ac.createBufferSource(); src.buffer = b; src.connect(ac.destination); src.start(0); } catch(e){}
+  }
+
   function AudioSrc(url){
     const self = {duration:0, ready:false, failed:false, onready:null, onend:null, onfail:null};
     let mode = 'el', ac = null, buf = null, node = null, startAt = 0, offset = 0, waPlaying = false, syncCT = 0, syncP = 0;
@@ -748,7 +760,7 @@ footer .fin{display:flex; flex-wrap:wrap; gap:8px 20px; justify-content:space-be
       if (waP) return waP; mode = 'wa';
       waP = (async () => {
         try {
-          const AC = window.AudioContext || window.webkitAudioContext; ac = ac || new AC();
+          ac = audioCtx(); if (!ac) throw new Error('This browser has no Web Audio.');
           const ab = await (await fetch(url)).arrayBuffer();
           buf = await new Promise((res, rej) => { const p = ac.decodeAudioData(ab, res, rej); if (p && p.then) p.then(res, rej); });
           self.duration = buf.duration; self.ready = true; self.onready && self.onready();
@@ -763,7 +775,7 @@ footer .fin{display:flex; flex-wrap:wrap; gap:8px 20px; justify-content:space-be
     };
     self.paused = () => mode === 'el' ? el.paused : !waPlaying;
     self.play = async () => {
-      if (mode === 'el'){ try { await el.play(); return true; } catch(e){ if (el.error){ await toWA(); return self.play(); } throw e; } }
+      if (mode === 'el'){ try { await el.play(); return true; } catch(e){ if (el.error || (e && e.name === 'NotSupportedError')){ await toWA(); return self.play(); } throw e; } }
       if (!ac) return false; if (ac.state === 'suspended') await ac.resume(); if (!buf) await waP; if (!buf) return false;
       if (offset >= buf.duration - 0.02) offset = 0;
       node = ac.createBufferSource(); node.buffer = buf; node.connect(ac.destination);
@@ -771,8 +783,8 @@ footer .fin{display:flex; flex-wrap:wrap; gap:8px 20px; justify-content:space-be
       startAt = ac.currentTime - offset; node.start(0, offset); waPlaying = true; return true;
     };
     self.pause = () => { if (mode === 'el'){ el.pause(); return; } if (waPlaying){ offset = self.time(); waPlaying = false; try { node.onended = null; node.stop(); } catch(e){} } };
-    self.seek = (s) => { if (mode === 'el'){ el.currentTime = s; syncCT = -1; return; } const was = waPlaying; if (was) self.pause(); offset = Math.max(0, s); if (was) self.play(); };
-    self.destroy = () => { self.pause(); try { el.removeAttribute('src'); el.load(); } catch(e){} if (ac && ac.close) try { ac.close(); } catch(e){} };
+    self.seek = (s) => { if (mode === 'el'){ try { el.currentTime = s; } catch(e){} syncCT = -1; return; } const was = waPlaying; if (was) self.pause(); offset = Math.max(0, s); if (was) self.play(); };
+    self.destroy = () => { self.pause(); try { el.removeAttribute('src'); el.load(); } catch(e){} };
     return self;
   }
 
@@ -805,12 +817,15 @@ footer .fin{display:flex; flex-wrap:wrap; gap:8px 20px; justify-content:space-be
         const rn = document.createElement('div'); rn.className = 'rn' + (j === PR ? ' pl' : ''); grid.appendChild(rn); rns.push(rn);
         cells.push(L.map(() => { const d = document.createElement('div'); d.className = 'c' + (j === PR ? ' pl' : ''); grid.appendChild(d); return d; }));
       }
-      // song-row ticks above the position slider
-      const tk = $('ticks'); tk.innerHTML = '';
       const l0 = L[lane0]; durMs = Math.max(T.end || 0, (au && au.duration ? au.duration * 1000 : 0), l0.t[l0.t.length - 1] + 1);
-      if (l0.r){ let pr = -1; for (let k = 0; k < l0.t.length; k++){ if (l0.r[k] !== pr){ pr = l0.r[k]; const i = document.createElement('i'); i.style.left = (l0.t[k] / durMs * 100) + '%'; if (pr % 4 === 0) i.className = 'b'; tk.appendChild(i); } } }
+      placeTicks();
       $('bpm').textContent = T.bpm || '--';
       paint(0, true);
+    }
+    // song-row ticks above the position slider
+    function placeTicks(){
+      const tk = $('ticks'), l0 = T.lanes[lane0]; tk.innerHTML = '';
+      if (l0.r){ let pr = -1; for (let k = 0; k < l0.t.length; k++){ if (l0.r[k] !== pr){ pr = l0.r[k]; const i = document.createElement('i'); i.style.left = (l0.t[k] / durMs * 100) + '%'; if (pr % 4 === 0) i.className = 'b'; tk.appendChild(i); } } }
     }
     // a cell's text: "NOTE INST" (the export also carries volume and a command; they're left off to keep columns narrow)
     function cellText(s){
@@ -852,13 +867,13 @@ footer .fin{display:flex; flex-wrap:wrap; gap:8px 20px; justify-content:space-be
       catch(e){ playing = false; setBtn(); toast('Couldn’t start the audio. Tap Play again.'); }
     }
     function stop(rewind){ if (!au) return; au.pause(); playing = false; setBtn(); cancelAnimationFrame(raf); raf = 0; if (rewind){ au.seek(0); paint(0, true); } else paint(au.time() * 1000, true); }
-    btn.addEventListener('click', () => playing ? stop(false) : play());
+    btn.addEventListener('click', () => { if (playing) stop(false); else { unlockAudio(); play(); } });
     seek.addEventListener('pointerdown', () => dragging = true);
     seek.addEventListener('pointerup', () => dragging = false);
     seek.addEventListener('input', () => { if (!T || !au) return; const ms = seek.value / 1000 * durMs; au.seek(ms / 1000); paint(ms, true); });
     seek.addEventListener('change', () => dragging = false);
     document.addEventListener('keydown', (e) => {
-      if (e.code === 'Space' && !e.target.closest('input:not([type=range]),textarea,select,button,a,[contenteditable]') && T){ e.preventDefault(); playing ? stop(false) : play(); }
+      if (e.code === 'Space' && !e.target.closest('input:not([type=range]),textarea,select,button,a,[contenteditable]') && T){ e.preventDefault(); if (playing) stop(false); else { unlockAudio(); play(); } }
     });
     document.addEventListener('visibilitychange', () => { if (document.hidden && playing) stop(false); });
 
@@ -872,10 +887,11 @@ footer .fin{display:flex; flex-wrap:wrap; gap:8px 20px; justify-content:space-be
         T = j; if (!entry.title) $('trackTtl').textContent = j.name || 'Track';
         if (!entry.audio){ build(); msg('This track has no audio file yet. Add its render (an .mp3) next to the .json.'); return; }
         au = AudioSrc(entry.audio);
-        au.onready = () => { if (T === j){ durMs = Math.max(durMs, au.duration * 1000); $('dur').textContent = '/ ' + fmtT(durMs); btn.disabled = false; } };
+        au.onready = () => { if (T === j && au.duration){ durMs = Math.max(durMs, au.duration * 1000); $('dur').textContent = '/ ' + fmtT(durMs); placeTicks(); } };
         au.onend = () => { playing = false; setBtn(); cancelAnimationFrame(raf); au.seek(0); paint(0, true); };
         au.onfail = () => { if (T === j){ btn.disabled = true; toast('The audio for this track didn’t load.'); } };
         build(); $('dur').textContent = '/ ' + fmtT(durMs);
+        btn.disabled = false;   // not waiting for the audio's details: Safari won't load them until Play is tapped
       } catch(e){ msg(e && e.message && /thunder|track|export/i.test(e.message) ? e.message : 'This track didn’t load. Check that its .json sits where content.json says.'); }
     }
     function fillSelect(){
