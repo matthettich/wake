@@ -324,7 +324,7 @@ footer .fin{display:flex; flex-wrap:wrap; gap:8px 20px; justify-content:space-be
     <div class="wrap">
       <div class="screen" id="screen">
         <div class="scrbar">
-          <div class="grp"><span class="label">Track</span><span class="ttl" id="trackTtl">Loading…</span><select id="trackSel" aria-label="Choose a track" hidden></select></div>
+          <div class="grp" id="trackGrp"><span class="label">Track</span><span class="ttl" id="trackTtl"></span><select id="trackSel" aria-label="Choose a track" hidden></select></div>
           <span class="sp"></span>
           <div class="grp"><span class="label">BPM</span><span class="val num" id="bpm">--</span></div>
           <div class="grp"><span class="label">Row</span><span class="val num" id="srow">--</span></div>
@@ -967,14 +967,16 @@ footer .fin{display:flex; flex-wrap:wrap; gap:8px 20px; justify-content:space-be
     });
     document.addEventListener('visibilitychange', () => { if (document.hidden && playing) stop(false); });
 
-    // load one track: {title, note, data (.json path) or json (already read), audio (.mp3 path)}
+    // load one track: {title (may be empty), note, data (.json path) or json (already read), audio (.mp3 path)}
     async function load(entry){
       if (au){ stop(false); au.destroy(); au = null; }
-      T = null; btn.disabled = true; $('trackTtl').textContent = entry.title || 'Track'; msg('Loading…');
+      // a track with no title shows none (the TRACK label goes too, unless there's a menu of tracks)
+      const named = !!(entry.title && String(entry.title).trim());
+      T = null; btn.disabled = true; $('trackTtl').textContent = named ? entry.title : ''; $('trackGrp').hidden = !named && tracks.length < 2; msg('Loading…');
       $('trackNote').textContent = entry.note ? entry.note : 'Made in ...Thunder Plus';
       try {
         const j = validate(entry.json || await (await fetch(entry.data, {cache:'no-cache'})).json());
-        T = j; if (!entry.title) $('trackTtl').textContent = j.name || 'Track';
+        T = j;
         if (!entry.audio){ build(); msg('This track has no audio file yet. Add its render (an .mp3) next to the .json.'); return; }
         au = AudioSrc(entry.audio);
         au.onready = () => { if (T === j && au.duration){ durMs = Math.max(durMs, au.duration * 1000); $('dur').textContent = '/ ' + fmtT(durMs); placeTicks(); } };

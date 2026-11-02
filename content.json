@@ -24,10 +24,10 @@
   ],
   "tracks": [
     {
-      "title": "Demo: electro",
-      "note": "Made in ...Thunder Plus with its Electro presets. Swap in your own export.",
-      "data": "tracks/demo.json",
-      "audio": "tracks/demo.mp3"
+      "title": "",
+      "note": "",
+      "data": "tracks/01.json",
+      "audio": "tracks/01.mp3"
     }
   ],
   "bio": {
