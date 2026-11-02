@@ -26,8 +26,8 @@ content:
           - { name: name, label: Name in the top bar and hero, type: string }
           - { name: title, label: Browser tab title, type: string }
           - { name: tagline, label: Tagline, type: text }
-          - { name: location, label: Location, type: string }
-          - { name: coords, label: Coordinates, type: string }
+          - { name: location, label: Place above the name (optional), type: string }
+          - { name: coords, label: Coordinates above the name (optional), type: string }
 
       - name: links
         label: Links (top of the page and in Contact)

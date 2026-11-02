@@ -1,6 +1,6 @@
 # matthettich.xyz
 
-The WAKE website: one page in the IDM skin from ...Thunder Plus (grey paper, black ink, one neon pink, JetBrains Mono), with a dithered cloud deck, a crown of areoles that lights up with the music, and a tracker that plays songs made in ...Thunder Plus. Plain HTML, no build step.
+The WAKE website: one page in the IDM skin from ...Thunder Plus (grey paper, black ink, one neon pink, JetBrains Mono), with a dithered cloud deck, an ORBIT screen like pump ORBIT's (a strange attractor that the music pushes; tap it for the next system), and a tracker that plays songs made in ...Thunder Plus. Plain HTML, no build step.
 
 ## What's where
 

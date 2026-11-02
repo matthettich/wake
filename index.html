@@ -18,7 +18,7 @@
     STYLE   1 TOKENS (the IDM skin) · 2 BASE · 3 TOP BAR · 4 KEYS (buttons) · 5 HERO & SKY · 6 TRACKER
             7 SECTIONS & CARDS · 8 BIO · 9 MUSIC · 10 APPS · 11 CONTACT · 12 FOOTER · 13 NARROW SCREENS
     HTML    TOP BAR · HERO · TRACKER · BIO · MUSIC · APPS · CONTACT · FOOTER
-    SCRIPT  A HELPERS · B COLOURS · C CROWN · D SKY · E COVERS · F TEXT HELPERS
+    SCRIPT  A HELPERS · B COLOURS · C ORBIT (the hero's ORBIT screen) · D SKY · E COVERS · F TEXT HELPERS
             G CONTENT (renderHero, renderBio, renderMusic, renderApps, renderContact)
             H AUDIO · I TRACKER PLAYER · J NAV TABS · K START
   ============================================================================================
@@ -30,7 +30,7 @@
 /* ==========================================================================================
    1 TOKENS: the IDM skin from ...Thunder Plus, with its neon pink. Grey paper and black ink, one neon pink,
    a little blue; JetBrains Mono throughout. Every colour and font on the page comes from here.
-   Layout: a sky band (dithered cloud deck + a floating crown of areoles) with a wide tracker
+   Layout: a sky band (dithered cloud deck + an ORBIT screen like pump ORBIT's) with a wide tracker
    docked on its clouds, then flat panels for bio, music, apps and contact.
    ========================================================================================== */
 :root{
@@ -111,7 +111,7 @@ strong,b{font-weight:700}
 .btn .arr{opacity:.8}
 
 /* ==========================================================================================
-   5 HERO & SKY: the canvas (#sky) draws the clouds and the crown behind the name
+   5 HERO & SKY: the canvas (#sky) draws the clouds; the ORBIT screen (#orbit) sits on them
    ========================================================================================== */
 .hero{position:relative; overflow:hidden; padding-block:52px 120px; isolation:isolate}
 #sky{position:absolute; inset:0; width:100%; height:100%; z-index:-1; display:block}
@@ -121,7 +121,11 @@ strong,b{font-weight:700}
 .name{font-size:clamp(56px, 10vw, 132px); font-weight:800; text-transform:uppercase; line-height:.88; letter-spacing:-.02em;
   margin:0 0 24px; display:flex; align-items:baseline; flex-wrap:nowrap}
 .tagline{font-size:clamp(14px, 1.6vw, 16px); line-height:1.65; max-width:40ch; margin:0; text-wrap:pretty}
-.hero-fig{min-height:360px}   /* an empty box: the crown is drawn into this spot on the canvas */
+.hero-fig{display:flex; align-items:center; justify-content:flex-end}
+/* the ORBIT screen: a strange attractor like pump ORBIT's display; tap for the next system */
+.orbit{position:relative; display:block; width:min(100%, 480px); aspect-ratio:4/3; padding:0; font:inherit; color:inherit; text-align:left;
+  background:var(--panel); border:1px solid var(--line); box-shadow:8px 8px 0 0 var(--cloud2); cursor:pointer}
+.orbit canvas{position:absolute; inset:0; width:100%; height:100%; display:block}
 
 /* ==========================================================================================
    6 TRACKER: docked on the cloud deck, plays tracks rendered from ...Thunder Plus
@@ -190,7 +194,7 @@ section.sec{padding-block:34px}
    9 MUSIC
    The intro text, the line above the cards, then one card per release (built by renderMusic
    and releaseCard in the script). Card, top to bottom:
-     .art   the cover: Bandcamp art, a drawn crown when there's no art, or the Bandcamp player
+     .art   the cover: Bandcamp art, a still ORBIT when there's no art, or the Bandcamp player
      .row1  release number (hex) · type pill (album / ep / track) · year
      h3     the title
      .acts  "▶ Play here" (opens the Bandcamp player in the card) and the Bandcamp link
@@ -248,7 +252,7 @@ footer .fin{display:flex; flex-wrap:wrap; gap:8px 20px; justify-content:space-be
 @media (max-width:860px){
   .hero{padding-block:36px 104px}
   .hero-in{grid-template-columns:minmax(0,1fr); gap:8px}
-  .hero-fig{min-height:250px}
+  .hero-fig{justify-content:center; margin-top:18px}
   .bio.hasphoto{grid-template-columns:minmax(0,1fr)}
   .bio figure{max-width:320px; order:-1}
   .contact{grid-template-columns:minmax(0,1fr)}
@@ -297,16 +301,20 @@ footer .fin{display:flex; flex-wrap:wrap; gap:8px 20px; justify-content:space-be
 </header>
 
 <main id="top">
-  <!-- ===== HERO: place, name, tagline (content.json "site"); the canvas draws clouds and the crown ===== -->
+  <!-- ===== HERO: name and tagline (content.json "site"); the canvas draws clouds, the ORBIT screen sits on them ===== -->
   <section class="hero" id="hero">
     <canvas id="sky" aria-hidden="true"></canvas>
     <div class="wrap hero-in">
       <div>
-        <p class="eyebrow" id="eyebrow"><span>Santa Fe, NM</span><span>35.687°N 105.938°W</span></p>
+        <p class="eyebrow" id="eyebrow" hidden></p>
         <h1 class="name" id="siteName" aria-label="wake">wake</h1>
         <p class="tagline" id="tagline">Electronic music by Matthew Hettich.</p>
       </div>
-      <div class="hero-fig" id="fig" aria-hidden="true"></div>
+      <div class="hero-fig">
+        <button class="orbit" id="orbit" type="button" aria-label="ORBIT display, a strange attractor. Tap for the next system.">
+          <canvas id="orbitCv" aria-hidden="true"></canvas>
+        </button>
+      </div>
     </div>
   </section>
 
@@ -384,7 +392,6 @@ footer .fin{display:flex; flex-wrap:wrap; gap:8px 20px; justify-content:space-be
 <footer>
   <div class="wrap"><div class="fin">
     <span id="foot1">© Matthew Hettich</span>
-    <span>IDM skin from ...Thunder Plus</span>
   </div></div>
 </footer>
 
@@ -420,62 +427,150 @@ footer .fin{display:flex; flex-wrap:wrap; gap:8px 20px; justify-content:space-be
   const hexOf = (c) => c.map(v => v.toString(16).padStart(2, '0')).join('');
 
   /* ========================================================================================
-     C CROWN: areoles on the golden angle, as on a barrel cactus seen from above.
-     Used for the big crown in the hero (it lights up with the tracker) and for release
-     covers that have no art.
+     C ORBIT: strange attractors, drawn the way pump ORBIT (the chaos synth) shows them: the
+     path through a chaotic system in 3D, turning slowly, newest stretch boldest, older loops
+     fading, a dot at the head, faint X / Y / Z axes. Same equations and the same CHAOS sweep
+     as ORBIT (pump: plugins/orbit/OrbitSystems.hpp). The hero's ORBIT screen runs one live;
+     release covers without art get a still one.
      ======================================================================================== */
-  const GA = Math.PI * (3 - Math.sqrt(5));   // the golden angle
-  function crown(ctx, cx, cy, R, o){
-    const N = o.N || 320, sp = o.spines || 4, rot = o.rot || 0, E = o.energy, L = o.lanes || 1, s = o.scale || 1;
-    const off = Math.max(4, R * 0.045);
-    // the disc and its offset outline (the keys' offset block)
-    ctx.lineWidth = 1.5 * s;
-    ctx.beginPath(); ctx.arc(cx + off, cy + off, R, 0, Math.PI * 2); ctx.strokeStyle = rgba(COL.dim); ctx.stroke();
-    ctx.beginPath(); ctx.arc(cx, cy, R, 0, Math.PI * 2); ctx.fillStyle = rgba(COL.panel); ctx.fill(); ctx.strokeStyle = rgba(COL.line); ctx.stroke();
-    const pts = new Array(N);
-    for (let k = 1; k <= N; k++){
-      const f = k / N, r = R * 0.9 * Math.sqrt(f), th = k * GA + rot;
-      pts[k - 1] = {x:cx + Math.cos(th) * r, y:cy + Math.sin(th) * r, th, sz:(0.7 + 1.9 * f) * s * (R / 180)};
+  const SYSTEMS = [
+    // p(chaos): the parameter CHAOS sweeps; h: the step (a turn of the orbit is about 160 steps); chaos: where it sits here
+    {name:'Lorenz', chaos:1.00, h:0.00375, start:[1, 1, 20], p:c => 160 - 132 * c,
+      d:(s, p) => [10 * (s[1] - s[0]), s[0] * (p - s[2]) - s[1], s[0] * s[1] - (8 / 3) * s[2]]},
+    {name:'Rossler', chaos:0.49, h:0.0375, start:[1, 0, 0], p:c => 2.5 + 6.5 * c,
+      d:(s, p) => [-s[1] - s[2], s[0] + 0.2 * s[1], 0.2 + s[2] * (s[0] - p)]},
+    {name:'Double scroll', chaos:1.00, h:0.0125, start:[0.7, 0, 0], p:c => 10.2 + 5.4 * c, swap:true,
+      d:(s, p) => { const m0 = -8 / 7, m1 = -5 / 7, hx = m1 * s[0] + 0.5 * (m0 - m1) * (Math.abs(s[0] + 1) - Math.abs(s[0] - 1));
+        return [p * (s[1] - s[0] - hx), s[0] - s[1] + s[2], -28 * s[1]]; }},
+    {name:'Thomas', chaos:0.79, h:0.156, start:[0.1, 0, -0.1], p:c => 0.30 - 0.14 * c,
+      d:(s, p) => [Math.sin(s[1]) - p * s[0], Math.sin(s[2]) - p * s[1], Math.sin(s[0]) - p * s[2]]},
+    {name:'Halvorsen', chaos:0.81, h:0.0156, start:[-1.48, -1.51, 2.04], p:c => 1.95 - 0.68 * c,
+      d:(s, p) => [-p * s[0] - 4 * s[1] - 4 * s[2] - s[1] * s[1], -p * s[1] - 4 * s[2] - 4 * s[0] - s[2] * s[2], -p * s[2] - 4 * s[0] - 4 * s[1] - s[0] * s[0]]},
+  ];
+  // one system running: RK4 steps, centred and scaled by its own mean and spread (as ORBIT's calibration does)
+  function Attractor(sys, chaos){
+    const S = SYSTEMS[sys], p = S.p(chaos == null ? S.chaos : chaos), h = S.h;
+    let s = S.start.slice();
+    const add = (a, k, f) => [a[0] + k[0] * f, a[1] + k[1] * f, a[2] + k[2] * f];
+    const ok = (q) => q.every(Number.isFinite) && Math.abs(q[0]) + Math.abs(q[1]) + Math.abs(q[2]) < 1e4;
+    function step(){
+      const k1 = S.d(s, p), k2 = S.d(add(s, k1, h / 2), p), k3 = S.d(add(s, k2, h / 2), p), k4 = S.d(add(s, k3, h), p);
+      for (let i = 0; i < 3; i++) s[i] += h / 6 * (k1[i] + 2 * k2[i] + 2 * k3[i] + k4[i]);
+      if (!ok(s)) s = S.start.slice();
     }
-    // spines, all in one stroke
-    ctx.beginPath();
-    for (const p of pts){
-      for (let j = 0; j < sp; j++){
-        const a = p.th + 0.45 + j * (Math.PI * 2 / sp), r0 = p.sz * 1.35, r1 = r0 + p.sz * 2.3;
-        ctx.moveTo(p.x + Math.cos(a) * r0, p.y + Math.sin(a) * r0); ctx.lineTo(p.x + Math.cos(a) * r1, p.y + Math.sin(a) * r1);
-      }
+    for (let i = 0; i < 160 * 30; i++) step();                       // settle onto the attractor
+    const mean = [0, 0, 0], sq = [0, 0, 0], N = 160 * 40;
+    for (let i = 0; i < N; i++){ step(); for (let k = 0; k < 3; k++){ mean[k] += s[k]; sq[k] += s[k] * s[k]; } }
+    const sd = [0, 0, 0]; for (let k = 0; k < 3; k++){ mean[k] /= N; sd[k] = Math.sqrt(Math.max(1e-9, sq[k] / N - mean[k] * mean[k])); }
+    const clamp3 = v => Math.max(-3, Math.min(3, v));
+    return {
+      name:S.name, swap:!!S.swap, chaos:chaos == null ? S.chaos : chaos,
+      step,
+      point(){ return [clamp3((s[0] - mean[0]) / sd[0]), clamp3((s[1] - mean[1]) / sd[1]), clamp3((s[2] - mean[2]) / sd[2])]; },
+      nudge(f){ for (let k = 0; k < 3; k++) s[k] += (Math.random() - 0.5) * f * sd[k]; }   // the music pushes the orbit
+    };
+  }
+  // a point on screen: turned about the vertical (yaw), tipped towards you (tilt), as ORBIT draws it
+  function project(q, swap, cx, cy, sc, yaw){
+    const a = q[0], b = swap ? q[2] : q[1], c = swap ? q[1] : q[2], tilt = 0.38;
+    const X = a * Math.cos(yaw) - b * Math.sin(yaw), D = a * Math.sin(yaw) + b * Math.cos(yaw);
+    return [cx + sc * X, cy - sc * (c * Math.cos(tilt) - D * Math.sin(tilt))];
+  }
+  // how far a system's path reaches (98% of its points), so it can be sized to fit any box while it turns:
+  // r across (the turn spins it in that plane), v up and down (with the tilt)
+  function extentOf(trail, swap){
+    const rs = [], cs = [];
+    for (const q of trail){ const a = q[0], b = swap ? q[2] : q[1], c = swap ? q[1] : q[2]; rs.push(Math.hypot(a, b)); cs.push(Math.abs(c)); }
+    const pct = (v) => { v.sort((x, y) => x - y); return v[Math.min(v.length - 1, Math.floor(v.length * 0.98))] || 1; };
+    const r = pct(rs), c = pct(cs);
+    return {r, v:c * Math.cos(0.38) + r * Math.sin(0.38)};
+  }
+  const fitScale = (ext, w, h, padX, padY) => Math.max(1, Math.min((w * 0.5 - padX) / ext.r, (h * 0.5 - padY) / ext.v));
+  // mix two colours (t = 0: the first)
+  const mix = (a, b, t) => [0, 1, 2].map(i => Math.round(a[i] + (b[i] - a[i]) * t));
+  // the axes (faint lines), the path in pieces (older fainter and thinner) and the head: ORBIT's drawing, no text
+  function drawOrbit(ctx, trail, n, swap, cx, cy, sc, yaw, o){
+    o = o || {};
+    ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+    const axes = [[1.6, 0, 0], [0, 1.6, 0], [0, 0, 1.6]], o0 = project([0, 0, 0], false, cx, cy, sc, yaw);
+    for (let k = 0; k < 3; k++){
+      const e = project(axes[k], false, cx, cy, sc, yaw);
+      ctx.beginPath(); ctx.moveTo(o0[0], o0[1]); ctx.lineTo(e[0], e[1]); ctx.strokeStyle = rgba(COL.dim); ctx.lineWidth = 1; ctx.stroke();
     }
-    ctx.lineWidth = Math.max(0.6, 0.75 * s); ctx.strokeStyle = rgba(COL.spine, 0.75); ctx.stroke();
-    // areoles
-    ctx.beginPath();
-    for (const p of pts){ ctx.moveTo(p.x + p.sz, p.y); ctx.arc(p.x, p.y, p.sz, 0, Math.PI * 2); }
-    ctx.fillStyle = rgba(COL.ink, 0.85); ctx.fill();
-    // blooms: each tracker lane that just played lights its own arm of the spiral
-    if (E){
-      for (let i = 0; i < L; i++){
-        const e = E[i]; if (e < 0.03) continue;
-        ctx.beginPath();
-        for (let k = i; k < N; k += L){ const p = pts[k]; const z = p.sz * (1 + 0.9 * e); ctx.moveTo(p.x + z, p.y); ctx.arc(p.x, p.y, z, 0, Math.PI * 2); }
-        ctx.fillStyle = rgba(COL.soft, Math.min(1, e)); ctx.fill();
-      }
+    if (n < 3) return;
+    const hot = mix(COL.soft, COL.ink, 0.3), glow = o.glow || 0, wide = o.scale || 1;
+    const pieces = 32, per = Math.max(2, Math.floor(n / pieces));
+    for (let s0 = 0; s0 < n - 1; s0 += per){
+      const s1 = Math.min(n - 1, s0 + per), age = s1 / n;
+      ctx.beginPath();
+      for (let i = s0; i <= s1; i++){ const pt = project(trail[i], swap, cx, cy, sc, yaw); if (i === s0) ctx.moveTo(pt[0], pt[1]); else ctx.lineTo(pt[0], pt[1]); }
+      ctx.strokeStyle = rgba(age > 0.85 && glow > 0.05 ? mix(hot, COL.soft, Math.min(1, glow)) : hot, 0.08 + 0.92 * age * age);
+      ctx.lineWidth = (0.8 + 1.4 * age) * wide * (1 + 0.6 * glow * age * age); ctx.stroke();
     }
-    // fixed blooms (release covers)
-    if (o.blooms){ ctx.beginPath(); for (const k of o.blooms){ const p = pts[k % N]; ctx.moveTo(p.x + p.sz * 1.6, p.y); ctx.arc(p.x, p.y, p.sz * 1.6, 0, Math.PI * 2); } ctx.fillStyle = rgba(COL.soft); ctx.fill(); }
+    const hd = project(trail[n - 1], swap, cx, cy, sc, yaw);
+    ctx.beginPath(); ctx.arc(hd[0], hd[1], (4 + 4 * glow) * wide, 0, Math.PI * 2);
+    ctx.fillStyle = rgba(glow > 0.05 ? COL.soft : COL.ink); ctx.fill();
   }
 
+  /* ---- the hero's ORBIT screen: runs one system live; tap it for the next system.
+     Orbit.flash(lane, lanes, level) is called by the tracker on every note: the orbit speeds up,
+     glows and gets a small push (a chaotic system makes the most of it). ---- */
+  const Orbit = (() => {
+    const box = $('orbit'), cv = $('orbitCv'), ctx = cv.getContext('2d');
+    const SHOW = 1600, trail = [];
+    let sys = 0, A = null, ext = null, W = 0, H = 0, dpr = 1, yaw = 0.6, energy = 0, acc = 0, last = 0, raf = 0, running = false, visible = true;
+    function choose(i){
+      sys = (i + SYSTEMS.length) % SYSTEMS.length; A = Attractor(sys); trail.length = 0;
+      for (let k = 0; k < SHOW; k++){ A.step(); trail.push(A.point()); }
+      ext = extentOf(trail, A.swap);
+      box.setAttribute('aria-label', 'ORBIT display: the ' + A.name + ' attractor. Tap for the next system.');
+      draw();
+    }
+    function size(){
+      const r = cv.getBoundingClientRect(); dpr = Math.min(2, window.devicePixelRatio || 1);
+      W = Math.max(1, Math.round(r.width)); H = Math.max(1, Math.round(r.height));
+      cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr); draw();
+    }
+    function draw(){
+      if (!W || !A) return;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, H);
+      drawOrbit(ctx, trail, trail.length, A.swap, W * 0.5, H * 0.5, fitScale(ext, W, H, 18, 18), yaw, {glow:Math.min(1, energy)});
+    }
+    function frame(ts){
+      raf = 0; if (!running) return;
+      const dt = last ? Math.min(0.1, (ts - last) / 1000) : 0; last = ts;
+      yaw += dt * 0.22;                                    // ORBIT's slow turn
+      acc += dt * 100 * (1 + 2.5 * Math.min(1.5, energy)); // about one loop every 1.6 s, faster while notes play
+      let k = Math.floor(acc); acc -= k; k = Math.min(k, 60);
+      while (k-- > 0){ A.step(); trail.push(A.point()); }
+      if (trail.length > SHOW) trail.splice(0, trail.length - SHOW);
+      energy *= Math.pow(0.08, dt);
+      draw();
+      raf = requestAnimationFrame(frame);
+    }
+    function start(){ if (reduceMotion || running || !visible || !A) return; running = true; last = 0; raf = requestAnimationFrame(frame); }   // !A: not until init() has picked a system
+    function stop(){ running = false; if (raf) cancelAnimationFrame(raf); raf = 0; }
+    box.addEventListener('click', () => choose(sys + 1));
+    if ('IntersectionObserver' in window) new IntersectionObserver(es => { visible = es[0].isIntersecting; visible ? start() : stop(); }).observe(box);
+    document.addEventListener('visibilitychange', () => document.hidden ? stop() : start());
+    new ResizeObserver(() => size()).observe(cv);
+    return {
+      init(){ choose(0); size(); start(); },
+      flash(i, n, v){ energy = Math.min(1.5, energy + 0.35 * v); if (A && i === 0) A.nudge(0.04 * v); if (reduceMotion) draw(); }
+    };
+  })();
+
   /* ========================================================================================
-     D SKY: the hero's canvas. An ordered-dither cloud deck drifting under the crown.
-     Sky.flash(lane, lanes, level) is called by the tracker on every note.
+     D SKY: the hero's background canvas, an ordered-dither cloud deck drifting slowly.
      Turns itself off when the hero is scrolled away, the tab is hidden, or the visitor
      asks for less motion (then it draws one still frame).
      ======================================================================================== */
   const Sky = (() => {
-    const cv = $('sky'), ctx = cv.getContext('2d'), hero = $('hero'), fig = $('fig');
+    const cv = $('sky'), ctx = cv.getContext('2d'), hero = $('hero');
     const PX = 3, FW = 256, FH = 128;   // cloud pixel size (CSS px); size of the noise fields
     const B4 = [0,8,2,10,12,4,14,6,3,11,1,9,15,7,13,5].map(v => v / 16 - 0.5);   // 4×4 ordered-dither matrix
-    let W = 0, H = 0, dpr = 1, lw = 0, lh = 0, low = null, lctx = null, img = null, disc = null;
-    let t1 = 0, t2 = 0, rot = 0, last = 0, running = false, visible = true, raf = 0;
-    const energy = new Float32Array(32); let lanes = 7;
+    let W = 0, H = 0, dpr = 1, lw = 0, lh = 0, low = null, lctx = null, img = null;
+    let t1 = 0, t2 = 0, last = 0, running = false, visible = true, raf = 0, skip = 0;
     function rng(seed){ return () => { seed |= 0; seed = seed + 0x6D2B79F5 | 0; let t = Math.imul(seed ^ seed >>> 15, 1 | seed); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
     // a tileable value-noise field (four octaves), made once
     function field(seed){
@@ -491,17 +586,12 @@ footer .fin{display:flex; flex-wrap:wrap; gap:8px 20px; justify-content:space-be
       return out;
     }
     const F1 = field(9), F2 = field(23);
-    // fit the canvas to the hero and place the crown in the .hero-fig box
     function size(){
       const r = hero.getBoundingClientRect(); W = Math.max(1, Math.round(r.width)); H = Math.max(1, Math.round(r.height));
       dpr = Math.min(2, window.devicePixelRatio || 1);
       cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr);
       lw = Math.ceil(W / PX); lh = Math.ceil(H / PX);
       low = document.createElement('canvas'); low.width = lw; low.height = lh; lctx = low.getContext('2d'); img = lctx.createImageData(lw, lh);
-      const f = fig.getBoundingClientRect();
-      const R = Math.max(70, Math.min(f.width * 0.46, f.height * 0.5, 230));
-      disc = {x:f.left - r.left + f.width - R - Math.min(24, f.width * 0.05), y:f.top - r.top + Math.min(f.height * 0.48, R + 6), R};
-      if (W < 860){ disc.x = f.left - r.left + f.width * 0.5; disc.y = f.top - r.top + f.height * 0.46; }
       frame(0, true);
     }
     // Two decks drifting at different speeds: a far, thin one higher up and a near, puffy one along the bottom.
@@ -535,29 +625,27 @@ footer .fin{display:flex; flex-wrap:wrap; gap:8px 20px; justify-content:space-be
     function frame(ts, force){
       if (!W) return;
       const dt = last ? Math.min(0.1, (ts - last) / 1000) : 0; last = ts;
-      if (!reduceMotion && !force){ t1 += dt * 2.2; t2 += dt * 3.6; rot += dt * 0.035; }   // drift and turn speeds
-      for (let i = 0; i < energy.length; i++) energy[i] *= Math.pow(0.02, dt);              // blooms fade
+      if (!reduceMotion && !force){ t1 += dt * 2.2; t2 += dt * 3.6; }   // drift speeds
       ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.clearRect(0, 0, cv.width, cv.height);
       clouds();
       ctx.imageSmoothingEnabled = false; ctx.drawImage(low, 0, 0, lw * PX * dpr, lh * PX * dpr);
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      if (disc) crown(ctx, disc.x, disc.y, disc.R, {N:Math.round(disc.R * 1.9), spines:4, rot, energy, lanes, scale:1});
     }
-    function loop(ts){ raf = 0; if (!running) return; frame(ts); if (running) raf = requestAnimationFrame(loop); }
+    // the clouds move slowly, so every other frame is plenty
+    function loop(ts){ raf = 0; if (!running) return; if ((skip ^= 1)) frame(ts); if (running) raf = requestAnimationFrame(loop); }
     function start(){ if (reduceMotion || running || !visible) return; running = true; last = 0; raf = requestAnimationFrame(loop); }
     function stop(){ running = false; if (raf) cancelAnimationFrame(raf); raf = 0; }
     if ('IntersectionObserver' in window) new IntersectionObserver(es => { visible = es[0].isIntersecting; visible ? start() : stop(); }).observe(hero);
     document.addEventListener('visibilitychange', () => document.hidden ? stop() : start());
     let resizeTimer; new ResizeObserver(() => { clearTimeout(resizeTimer); resizeTimer = setTimeout(size, 60); }).observe(hero);
     return {
-      init(){ size(); start(); },
-      flash(i, n, v){ lanes = Math.max(1, Math.min(32, n)); if (i < 32) energy[i] = Math.max(energy[i], v); if (reduceMotion && W) frame(performance.now(), true); }
+      init(){ size(); start(); Orbit.init(); },
+      flash(i, n, v){ Orbit.flash(i, n, v); }
     };
   })();
 
   /* ========================================================================================
-     E COVERS: a crown drawn from a release's title, for releases with no cover art
-     (or when the art can't load)
+     E COVERS: a still ORBIT drawn from a release's title, for releases with no cover art
+     (or when the art can't load). The title picks the system and the angle.
      ======================================================================================== */
   const Covers = (() => {
     function hash(s){ let h = 2166136261; for (let i = 0; i < s.length; i++){ h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); } return h >>> 0; }
@@ -565,17 +653,17 @@ footer .fin{display:flex; flex-wrap:wrap; gap:8px 20px; justify-content:space-be
       const box = cv.parentElement.getBoundingClientRect(), dpr = Math.min(2, window.devicePixelRatio || 1);
       const w = Math.max(60, Math.round(box.width)), h = Math.max(60, Math.round(box.height));
       cv.width = w * dpr; cv.height = h * dpr; const c = cv.getContext('2d'); c.setTransform(dpr, 0, 0, dpr, 0, 0);
-      const H = hash(title); c.fillStyle = rgba(COL.bg); c.fillRect(0, 0, w, h);
+      const H = hash(title); c.fillStyle = rgba(COL.panel); c.fillRect(0, 0, w, h);
       // a band of dithered cloud at the foot
       const B = [0,8,2,10,12,4,14,6,3,11,1,9,15,7,13,5]; const px = 3;
-      for (let y = Math.floor(h * 0.62); y < h; y += px) for (let x = 0; x < w; x += px){
-        const k = (y - h * 0.62) / (h * 0.38), wave = Math.sin(x * 0.045 + (H & 255)) * 0.18 + Math.sin(x * 0.11 + (H >> 8 & 255)) * 0.1;
+      for (let y = Math.floor(h * 0.66); y < h; y += px) for (let x = 0; x < w; x += px){
+        const k = (y - h * 0.66) / (h * 0.34), wave = Math.sin(x * 0.045 + (H & 255)) * 0.18 + Math.sin(x * 0.11 + (H >> 8 & 255)) * 0.1;
         if (k + wave > B[((y / px) & 3) * 4 + ((x / px) & 3)] / 16 + 0.15){ c.fillStyle = rgba(k + wave > 0.7 ? COL.cloud2 : COL.cloud); c.fillRect(x, y, px, px); }
       }
-      // the crown: size, spines, turn and blooms all come from the title, so each release looks different
-      const R = Math.min(w, h) * (0.3 + (H % 7) / 70), sp = 3 + (H % 4);
-      const blooms = []; for (let i = 0; i < 2 + (H >>> 5) % 4; i++) blooms.push(((H >>> (i * 3)) % 23) + i * 7);
-      crown(c, w * (0.45 + ((H >> 3) % 10) / 100), h * 0.44, R, {N:Math.round(R * 2.2), spines:sp, rot:(H % 628) / 100, scale:0.8, blooms});
+      // the orbit: system and angle from the title, so each release looks different
+      const A = Attractor(H % SYSTEMS.length), n = 2000, trail = [];
+      for (let k = 0; k < n; k++){ A.step(); trail.push(A.point()); }
+      drawOrbit(c, trail, n, A.swap, w * 0.5, h * 0.47, fitScale(extentOf(trail, A.swap), w, h, 14, 16) * 0.85, (H % 628) / 100, {scale:0.75});
     }
     return { add(cv, title){ requestAnimationFrame(() => draw(cv, title)); } };
   })();
@@ -619,14 +707,16 @@ footer .fin{display:flex; flex-wrap:wrap; gap:8px 20px; justify-content:space-be
     requestAnimationFrame(() => Sky.init());
   }
 
-  /* ---- HERO: content.json "site" (name, title, tagline, location, coords) ---- */
+  /* ---- HERO: content.json "site" (name, title, tagline; location and coords are optional) ---- */
   function renderHero(site){
     if (site.title) document.title = site.title;
     if (site.name){
       $('siteName').innerHTML = nameHTML(site.name); $('brand').innerHTML = nameHTML(site.name);
       $('siteName').setAttribute('aria-label', site.name.replace(/^(\.\.\.|…)/, ''));
     }
-    $('eyebrow').innerHTML = [site.location, site.coords, site.label].filter(Boolean).map(s => '<span>' + esc(s) + '</span>').join('');
+    // the small line above the name: site.location and site.coords, when set (hidden when both are empty)
+    const above = [site.location, site.coords].filter(Boolean);
+    $('eyebrow').innerHTML = above.map(s => '<span>' + esc(s) + '</span>').join(''); $('eyebrow').hidden = !above.length;
     if (site.tagline) $('tagline').innerHTML = md(site.tagline);
   }
 
@@ -665,16 +755,16 @@ footer .fin{display:flex; flex-wrap:wrap; gap:8px 20px; justify-content:space-be
        year   shown at the right of the card's top line (leave "" to hide)
        url    the Bandcamp page: the "Bandcamp ›" button
        embed  "album=123…" or "track=123…" from Bandcamp's Share / Embed code: adds "▶ Play here"
-       cover  an image link (Bandcamp art, or images/name.jpg); without one, a crown is drawn   */
+       cover  an image link (Bandcamp art, or images/name.jpg); without one, a still ORBIT is drawn   */
   function releaseCard(r, i){
     const card = document.createElement('article'); card.className = 'card rel';
     const type = (r.type || 'album').toLowerCase();
 
-    // .art: the cover art, or a drawn crown if there's none or it fails to load
+    // .art: the cover art, or a still ORBIT if there's none or it fails to load
     const art = document.createElement('div'); art.className = 'art';
-    const drawCrown = () => { art.innerHTML = ''; const cv = document.createElement('canvas'); cv.setAttribute('aria-hidden', 'true'); art.appendChild(cv); Covers.add(cv, r.title || String(i)); };
-    if (r.cover){ const img = new Image(); img.alt = 'Cover of ' + (r.title || ''); img.loading = 'lazy'; img.onerror = drawCrown; img.src = r.cover; art.appendChild(img); }
-    else drawCrown();
+    const drawCover = () => { art.innerHTML = ''; const cv = document.createElement('canvas'); cv.setAttribute('aria-hidden', 'true'); art.appendChild(cv); Covers.add(cv, r.title || String(i)); };
+    if (r.cover){ const img = new Image(); img.alt = 'Cover of ' + (r.title || ''); img.loading = 'lazy'; img.onerror = drawCover; img.src = r.cover; art.appendChild(img); }
+    else drawCover();
 
     // .row1 and the title: number (hex, like a tracker row) · type · year, then the title
     const meta = document.createElement('div'); meta.className = 'meta2';
@@ -833,7 +923,7 @@ footer .fin{display:flex; flex-wrap:wrap; gap:8px 20px; justify-content:space-be
       const p = s.split(' '), note = p[0] || '---', inst = p[1] || '--';
       return {t:note + ' ' + inst, c:note === 'OFF' ? 'c off' : note === '---' ? 'c fx' : 'c n', note};
     }
-    // draw the rows around the playhead at time ms; light the crown for notes that just played
+    // draw the rows around the playhead at time ms; notes that just played push the ORBIT screen
     function paint(ms, force){
       const L = T.lanes;
       for (let i = 0; i < L.length; i++){
