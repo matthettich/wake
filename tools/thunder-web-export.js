@@ -10,7 +10,11 @@
      lanes[]              one per track that has notes and isn't muted:
        n, name, poly        track number (1-based), its name (track name, else the pad it plays most), mono or poly
        t[], c[], s[], r[]   per step: time in ms, cell (index into dict), phrase row, song row
-   Cell text: "NOTE INST VOL FX", e.g. "C-4 01 40 DEL03"; a poly track adds its chord after the note ("C-4+eg"). */
+       m[]                  (only when the track has muted song blocks) the steps that don't sound, as
+                            [first, end) index ranges: the block is muted, so its notes are shown but not played
+   Cell text: "NOTE INST VOL FX1 FX2 FX3", e.g. "C-4 01 40 DEL03"; a poly track adds its chord after the note ("C-4+eg").
+   Each FX is a command and its value ("RET22"); empty FX at the end are left off, and an empty one before a used
+   one is "-----". */
 function webTimeline(){
   const seq = makeSeq(S, 'song', {row:S.renderFrom, once:true});
   if (!seq.alive()) return null;
@@ -26,15 +30,19 @@ function webTimeline(){
     if (!row || row.every(v => v < 0)) return '';
     let n = noteS(row[0]);
     if (poly){ const more = row.slice(1, NCOL).filter(v => v >= 0); if (more.length) n += '+' + more.map(v => v === OFF ? '×' : NBL[v % 12]).join(''); }
-    const fx = row[FX0] >= 0 ? (FXC[row[FX0]] || '???') + h2(row[FX0 + 1]) : '';
-    return (n + ' ' + h2(row[IC]) + ' ' + h2(row[VC]) + (fx ? ' ' + fx : ''));
+    const fxs = []; for (let k = FX0; k < RW; k += 2) fxs.push(row[k] >= 0 ? (FXC[row[k]] || '???') + h2(row[k + 1]) : '-----');
+    while (fxs.length && fxs[fxs.length - 1] === '-----') fxs.pop();
+    return n + ' ' + h2(row[IC]) + ' ' + h2(row[VC]) + (fxs.length ? ' ' + fxs.join(' ') : '');
   };
-  const lanes = keep.map(t => ({n:t + 1, name:tName(t) || stemName(t, notes), poly:isPolyT(t), t:[], c:[], s:[], r:[]}));
+  const lanes = keep.map(t => ({n:t + 1, name:tName(t) || stemName(t, notes), poly:isPolyT(t), t:[], c:[], s:[], r:[], m:[]}));
   const at = new Map(keep.map((t, i) => [t, lanes[i]]));
   for (const st of steps) for (const [t, L] of at){
     const p = st.pos[t]; if (!p) continue;
     const ph = p.phrase >= 0 ? S.phrases[p.phrase] : null;
     L.t.push(Math.round(st.t * 1000)); L.c.push(id(cellOf(ph ? ph[p.step] : null, L.poly))); L.s.push(p.step); L.r.push(p.row);
+    // a muted song block still runs its rows but its notes are dropped (as makeSeq does): mark those steps
+    if (blockMuted(S, p.row, t)){ const k = L.t.length - 1, last = L.m[L.m.length - 1]; if (last && last[1] === k) last[1] = k + 1; else L.m.push([k, k + 1]); }
   }
+  for (const L of lanes) if (!L.m.length) delete L.m;
   return {app:'thunder-web', v:1, name:S.name || 'Song', bpm:S.bpm, lpb:S.lpb || 4, end:Math.round(last * 1000), dict, lanes};
 }

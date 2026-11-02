@@ -82,6 +82,11 @@ strong,b{font-weight:700}
 .name .ar{width:.22em; height:.22em}
 .ar .sp{stroke:var(--ar-spine, currentColor)}
 
+/* the W in the site name, drawn as two V's joined at the top so its strokes match the other letters. The real W stays
+   in the page (for copying and screen readers), invisible; the V's are drawn over it, and the padding makes room. */
+.ww{position:relative; display:inline-block; -webkit-text-fill-color:transparent; padding-right:.36em}
+.ww::before{content:"VV"; position:absolute; left:0; top:0; letter-spacing:-.2em; -webkit-text-fill-color:currentColor; pointer-events:none}
+
 /* ==========================================================================================
    3 TOP BAR
    ========================================================================================== */
@@ -141,6 +146,7 @@ strong,b{font-weight:700}
 .gridwrap{overflow-x:auto; overscroll-behavior-x:contain; position:relative}
 .tgrid{display:grid; font-size:13px; line-height:1; padding:4px 0 6px; min-width:100%; width:max-content}
 .tgrid > div{padding:4px 10px; white-space:nowrap}
+.tgrid .c, .tgrid .hd{contain:inline-size; overflow:hidden}   /* column widths come from the code (build), not the text */
 .tgrid .hd{position:sticky; top:0; color:var(--muted); font-size:11px; letter-spacing:.08em; text-transform:uppercase; padding-block:8px 7px; border-bottom:1px solid var(--dim); overflow:hidden; text-overflow:ellipsis}
 .tgrid .hd .tn{color:var(--dim); margin-right:.5em}
 .tgrid .rn{color:var(--muted); text-align:right; padding-right:8px; position:sticky; left:0; background:var(--bg); z-index:1}
@@ -150,9 +156,15 @@ strong,b{font-weight:700}
 .tgrid .c.poly{color:var(--soft)}      /* a note on a poly track */
 .tgrid .c.off{color:var(--muted)}      /* note OFF */
 .tgrid .c.fx{color:var(--muted)}       /* a command without a note */
+.tgrid .fx{color:var(--alt)}           /* an effect command in the FX column */
+.tgrid .fe{color:var(--dim)}           /* an empty FX slot */
+.tgrid .c.mu, .tgrid .c.mu .fx{color:var(--dim)}   /* in a muted song block: shown, but it doesn't play */
+.tgrid .hd.mu{color:var(--dim)}        /* the track's name while the playhead is in a muted block */
 .tgrid .b4{background:color-mix(in srgb, var(--panel2) 60%, transparent)}   /* every 4th row */
 .tgrid .pl{background:var(--ink)!important; color:var(--on)!important}       /* the playhead row */
 .tgrid .c.pl.hit{background:var(--soft)!important; color:var(--on-soft)!important}
+.tgrid .c.pl.mu{color:var(--spine)!important}   /* muted, on the playhead: grey but readable */
+.tgrid .pl .fx, .tgrid .pl .fe{color:inherit} .tgrid .pl .fe{opacity:.5}
 .seekrow{position:relative; padding:10px 14px 6px; border-top:1px solid var(--dim)}
 .ticks{position:relative; height:8px; margin:0 8px}   /* one tick per song row */
 .ticks i{position:absolute; top:0; bottom:0; width:1px; background:var(--dim)}
@@ -711,7 +723,8 @@ footer .fin{display:flex; flex-wrap:wrap; gap:8px 20px; justify-content:space-be
   function renderHero(site){
     if (site.title) document.title = site.title;
     if (site.name){
-      $('siteName').innerHTML = nameHTML(site.name); $('brand').innerHTML = nameHTML(site.name);
+      const nm = nameHTML(site.name).replace(/w/gi, '<span class="ww">$&</span>');   // see .ww in the styles
+      $('siteName').innerHTML = nm; $('brand').innerHTML = nm;
       $('siteName').setAttribute('aria-label', site.name.replace(/^(\.\.\.|…)/, ''));
     }
     // the small line above the name: site.location and site.coords, when set (hidden when both are empty)
@@ -884,7 +897,7 @@ footer .fin{display:flex; flex-wrap:wrap; gap:8px 20px; justify-content:space-be
      ======================================================================================== */
   const Player = (() => {
     const VIS = 16, PR = 4;   // rows on screen; which of them is the playhead
-    let tracks = [], T = null, au = null, cells = [], rns = [], lastIdx = [], playing = false, raf = 0, durMs = 0, dragging = false, lane0 = 0, rowsMax = 0;
+    let tracks = [], T = null, au = null, cells = [], rns = [], hds = [], lastIdx = [], playing = false, raf = 0, durMs = 0, dragging = false, lane0 = 0, rowsMax = 0;
     const grid = $('tgrid'), btn = $('play'), seek = $('seek');
     const fmtT = (ms) => { const s = Math.max(0, ms / 1000); return Math.floor(s / 60) + ':' + String(Math.floor(s % 60)).padStart(2, '0'); };
     function upper(a, v){ let lo = 0, hi = a.length; while (lo < hi){ const m = (lo + hi) >> 1; if (a[m] <= v) lo = m + 1; else hi = m; } return lo; }
@@ -897,12 +910,19 @@ footer .fin{display:flex; flex-wrap:wrap; gap:8px 20px; justify-content:space-be
     }
     // the grid: a header row of track names, then VIS rows of cells per lane
     function build(){
-      const L = T.lanes; grid.innerHTML = ''; cells = []; rns = []; lastIdx = L.map(() => -2);
-      grid.style.gridTemplateColumns = '4ch repeat(' + L.length + ', minmax(8.5ch, 1fr))';
+      const L = T.lanes; grid.innerHTML = ''; cells = []; rns = []; hds = []; lastIdx = L.map(() => -2);
+      // muted song blocks: the export lists them as [first, end) step ranges per track; one flag per step here
+      for (const l of L){ l.mu = new Uint8Array(l.t.length); for (const [a, b] of (l.m || [])) l.mu.fill(1, Math.max(0, a), Math.min(l.t.length, b)); }
+      // FX columns: as many as the track uses (0 to 3); each widens its column
+      for (const l of L){ l.fx = 0; for (const ci of new Set(l.c)){ const s = T.dict[ci]; if (s) l.fx = Math.min(3, Math.max(l.fx, s.split(' ').length - 3)); } }
+      // each column fits its note, instrument and FX (or the track's name, up to 16ch); spare width is shared in proportion
+      const colW = l => { let m = 6; for (const ci of new Set(l.c)){ const p = (T.dict[ci] || '').split(' '); if (p[1]) m = Math.max(m, (p[0] + ' ' + p[1]).length); }
+        const cw = m + 7 * l.fx + 2.6, hw = Math.min(16, (3 + String(l.name || '').length) * 0.96 + 2.6); return Math.max(cw, hw).toFixed(1); };
+      grid.style.gridTemplateColumns = '4ch ' + L.map(l => { const w = colW(l); return 'minmax(' + w + 'ch, ' + w + 'fr)'; }).join(' ');
       lane0 = 0; for (let i = 1; i < L.length; i++) if (L[i].t.length > L[lane0].t.length) lane0 = i;   // the row numbers follow the busiest lane
       rowsMax = 0; for (const l of L) if (l.r) for (const v of l.r) if (v > rowsMax) rowsMax = v;
       const h0 = document.createElement('div'); h0.className = 'hd rn'; grid.appendChild(h0);
-      L.forEach(l => { const h = document.createElement('div'); h.className = 'hd'; h.innerHTML = '<span class="tn">' + String(l.n || '').padStart(2, '0') + '</span>' + esc(l.name || ''); h.title = l.name || ''; grid.appendChild(h); });
+      L.forEach(l => { const h = document.createElement('div'); h.className = 'hd'; h.innerHTML = '<span class="tn">' + String(l.n || '').padStart(2, '0') + '</span>' + esc(l.name || ''); h.title = l.name || ''; grid.appendChild(h); hds.push(h); });
       for (let j = 0; j < VIS; j++){
         const rn = document.createElement('div'); rn.className = 'rn' + (j === PR ? ' pl' : ''); grid.appendChild(rn); rns.push(rn);
         cells.push(L.map(() => { const d = document.createElement('div'); d.className = 'c' + (j === PR ? ' pl' : ''); grid.appendChild(d); return d; }));
@@ -917,26 +937,30 @@ footer .fin{display:flex; flex-wrap:wrap; gap:8px 20px; justify-content:space-be
       const tk = $('ticks'), l0 = T.lanes[lane0]; tk.innerHTML = '';
       if (l0.r){ let pr = -1; for (let k = 0; k < l0.t.length; k++){ if (l0.r[k] !== pr){ pr = l0.r[k]; const i = document.createElement('i'); i.style.left = (l0.t[k] / durMs * 100) + '%'; if (pr % 4 === 0) i.className = 'b'; tk.appendChild(i); } } }
     }
-    // a cell's text: "NOTE INST" (the export also carries volume and a command; they're left off to keep columns narrow)
-    function cellText(s){
-      if (!s) return {t:'··· ··', c:'c'};
-      const p = s.split(' '), note = p[0] || '---', inst = p[1] || '--';
-      return {t:note + ' ' + inst, c:note === 'OFF' ? 'c off' : note === '---' ? 'c fx' : 'c n', note};
+    // a cell: "NOTE INST", then the track's FX columns ("PSL 20"; empty ones dotted). The export also carries the
+    // volume; it's left off to keep columns narrow.
+    function cellText(s, nfx){
+      const p = s ? s.split(' ') : [], note = p[0] || '---', inst = p[1] || '--';
+      let h = s ? esc(note + ' ' + inst) : '··· ··';
+      for (let k = 0; k < nfx; k++){ const f = p[3 + k]; h += (f && f !== '-----') ? ' <span class="fx">' + esc(f.slice(0, 3) + ' ' + f.slice(3)) + '</span>' : ' <span class="fe">··· ··</span>'; }
+      return {h, c:!s ? 'c' : note === 'OFF' ? 'c off' : note === '---' ? 'c fx' : 'c n', note};
     }
     // draw the rows around the playhead at time ms; notes that just played push the ORBIT screen
+    // (notes in a muted song block are drawn grey and push nothing: they don't play)
     function paint(ms, force){
       const L = T.lanes;
       for (let i = 0; i < L.length; i++){
         const l = L[i], idx = upper(l.t, ms) - 1;
         if (!force && idx === lastIdx[i]) continue;
-        if (playing && idx > lastIdx[i] && idx >= 0){ const s = T.dict[l.c[idx]]; if (s){ const p = s.split(' '); if (p[0] && p[0] !== '---' && p[0] !== 'OFF'){ const v = p[2] && p[2] !== '--' ? parseInt(p[2], 16) / 255 : 1; Sky.flash(i, L.length, 0.35 + 0.65 * v); } } }
+        if (playing && idx > lastIdx[i] && idx >= 0 && !l.mu[idx]){ const s = T.dict[l.c[idx]]; if (s){ const p = s.split(' '); if (p[0] && p[0] !== '---' && p[0] !== 'OFF'){ const v = p[2] && p[2] !== '--' ? parseInt(p[2], 16) / 255 : 1; Sky.flash(i, L.length, 0.35 + 0.65 * v); } } }
         lastIdx[i] = idx;
+        hds[i].classList.toggle('mu', idx >= 0 && !!l.mu[idx]);
         for (let j = 0; j < VIS; j++){
           const k = idx + j - PR, el = cells[j][i];
           let cls = 'c', txt = '';
-          if (k >= 0 && k < l.t.length){ const ct = cellText(T.dict[l.c[k]]); txt = ct.t; cls = ct.c + (l.poly && ct.c === 'c n' ? ' poly' : ''); const st = l.s ? l.s[k] : k; if (st % 4 === 0) cls += ' b4'; if (j === PR && ct.c === 'c n' && playing) cls += ' hit'; }
+          if (k >= 0 && k < l.t.length){ const ct = cellText(T.dict[l.c[k]], l.fx), mu = l.mu[k]; txt = ct.h; cls = ct.c + (mu ? ' mu' : (l.poly && ct.c === 'c n' ? ' poly' : '')); const st = l.s ? l.s[k] : k; if (st % 4 === 0) cls += ' b4'; if (j === PR && ct.c === 'c n' && playing && !mu) cls += ' hit'; }
           if (j === PR) cls += ' pl';
-          if (el.textContent !== txt) el.textContent = txt;
+          if (el._h !== txt){ el.innerHTML = txt; el._h = txt; }
           if (el.className !== cls) el.className = cls;
         }
         if (i === lane0){
