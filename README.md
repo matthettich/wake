@@ -1,13 +1,13 @@
 # matthettich.xyz
 
-The WAKE website: one page in the IDM skin from ...Thunder Plus (grey paper, black ink, one neon pink, JetBrains Mono), with a dithered cloud deck, an ORBIT screen like pump ORBIT's (a strange attractor that the music pushes; tap it for the next system), and a tracker that plays songs made in ...Thunder Plus. Plain HTML, no build step.
+The WAKE website: one page in the IDM skin from ...Thunder Plus (grey paper, black ink, one neon pink, JetBrains Mono, with the WAKE name in Jost Bold), with a dithered cloud deck, an ORBIT screen like pump ORBIT's (a strange attractor that the music pushes; tap it for the next system), and a tracker that plays songs made in ...Thunder Plus. Plain HTML, no build step.
 
 ## What's where
 
 | File | What it is |
 | --- | --- |
 | `content.json` | **All the words and links on the site.** Tracks, bio, releases, apps, contact. The only file you need to touch to update the site. |
-| `index.html` | The design and code. Leave it alone unless you're changing the look. The colours and font are all at the top, under "1 TOKENS". |
+| `index.html` | The design and code. Leave it alone unless you're changing the look. The colours and fonts are all at the top, under "1 TOKENS" (`--f-name` is the WAKE name's font). |
 | `tracks/` | Songs for the tracker: a `.json` web export and its `.mp3` for each. |
 | `images/` | Photos and cover art. Put the bio photo here as `images/bio.jpg`. |
 | `.pages.yml` | Settings for Pages CMS, the form editor (see below). |

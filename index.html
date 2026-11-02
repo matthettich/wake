@@ -25,7 +25,7 @@
 -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=Jost:wght@700&family=League+Spartan:wght@700&display=swap">
 <style>
 /* ==========================================================================================
    1 TOKENS: the IDM skin from ...Thunder Plus, with its neon pink. Grey paper and black ink, one neon pink,
@@ -52,6 +52,9 @@
   --btn-shadow-dn:1px 1px 0 0 var(--bg), 1px 1px 0 1.5px var(--dim);
   /* type */
   --f-mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+  /* the WAKE name: Jost Bold, a free font drawn after Futura. For League Spartan (flat-cut points) instead, change
+     "Jost" to "League Spartan" here; both are already loaded. */
+  --f-name:"Jost",Futura,"Century Gothic",sans-serif;
   --body-size:14px; --lh:1.72;
   color-scheme:light;
 }
@@ -82,17 +85,12 @@ strong,b{font-weight:700}
 .name .ar{width:.22em; height:.22em}
 .ar .sp{stroke:var(--ar-spine, currentColor)}
 
-/* the W in the site name, drawn as two V's joined at the top so its strokes match the other letters. The real W stays
-   in the page (for copying and screen readers), invisible; the V's are drawn over it, and the padding makes room. */
-.ww{position:relative; display:inline-block; -webkit-text-fill-color:transparent; padding-right:.36em}
-.ww::before{content:"VV"; position:absolute; left:0; top:0; letter-spacing:-.2em; -webkit-text-fill-color:currentColor; pointer-events:none}
-
 /* ==========================================================================================
    3 TOP BAR
    ========================================================================================== */
 .top{position:sticky; top:env(safe-area-inset-top, 0px); z-index:20; background:var(--panel2); border-bottom:1px solid var(--line)}
 .top .wrap{display:flex; align-items:center; gap:18px; min-height:52px}
-.brand{font-size:18px; font-weight:700; text-transform:uppercase; letter-spacing:.08em; text-decoration:none; white-space:nowrap; flex:none; display:inline-flex; align-items:baseline}
+.brand{font-family:var(--f-name); font-size:20px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; text-decoration:none; white-space:nowrap; flex:none; display:inline-flex; align-items:baseline}
 .tabs{display:flex; gap:2px; overflow-x:auto; scrollbar-width:none; flex:1 1 auto; min-width:0}
 .tabs::-webkit-scrollbar{display:none}
 .tabs a{display:block; padding:16px 10px 13px; text-decoration:none; font-size:13px; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); white-space:nowrap}
@@ -123,7 +121,7 @@ strong,b{font-weight:700}
 .hero-in{display:grid; grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr); gap:32px; align-items:center}
 .eyebrow{font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); margin:0 0 16px}
 .eyebrow span + span::before{content:"/"; margin:0 .8em; color:var(--soft)}
-.name{font-size:clamp(56px, 10vw, 132px); font-weight:800; text-transform:uppercase; line-height:.88; letter-spacing:-.02em;
+.name{font-family:var(--f-name); font-size:clamp(56px, 10vw, 132px); font-weight:700; text-transform:uppercase; line-height:.88; letter-spacing:0;
   margin:0 0 24px; display:flex; align-items:baseline; flex-wrap:nowrap}
 .tagline{font-size:clamp(14px, 1.6vw, 16px); line-height:1.65; max-width:40ch; margin:0; text-wrap:pretty}
 .hero-fig{display:flex; align-items:center; justify-content:flex-end}
@@ -723,8 +721,7 @@ footer .fin{display:flex; flex-wrap:wrap; gap:8px 20px; justify-content:space-be
   function renderHero(site){
     if (site.title) document.title = site.title;
     if (site.name){
-      const nm = nameHTML(site.name).replace(/w/gi, '<span class="ww">$&</span>');   // see .ww in the styles
-      $('siteName').innerHTML = nm; $('brand').innerHTML = nm;
+      $('siteName').innerHTML = nameHTML(site.name); $('brand').innerHTML = nameHTML(site.name);
       $('siteName').setAttribute('aria-label', site.name.replace(/^(\.\.\.|…)/, ''));
     }
     // the small line above the name: site.location and site.coords, when set (hidden when both are empty)
