@@ -221,7 +221,7 @@ section.sec{padding-block:34px}
 .app p{margin:0; max-width:52ch}
 .app .host{font-size:11px; color:var(--muted); overflow-wrap:anywhere}
 .app .go{margin-top:auto; display:flex; flex-wrap:wrap; gap:10px; padding-top:4px}
-.pill.audio{color:var(--alt)} .pill.video{color:var(--soft)} .pill.sleep{color:var(--muted)}
+.pill.audio{color:var(--alt)} .pill.video{color:var(--soft)} .pill.plugins{color:var(--ink)} .pill.health,.pill.sleep{color:var(--muted)}
 
 /* ==========================================================================================
    11 CONTACT
@@ -700,7 +700,7 @@ footer .fin{display:flex; flex-wrap:wrap; gap:8px 20px; justify-content:space-be
     return card;
   }
 
-  /* ---- APPS: content.json "apps" (name, kind = audio / video / sleep, url, description) ---- */
+  /* ---- APPS: content.json "apps" (name, kind = audio / video / plugins / health, url, description) ---- */
   function renderApps(apps){
     $('appsMeta').textContent = apps.length + (apps.length === 1 ? ' app' : ' apps');
     const ag = $('appsGrid'); ag.innerHTML = '';

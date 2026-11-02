@@ -129,16 +129,16 @@
       "description": "Modular video patching: camera, effects and recording, with MIDI control and a clip mode for live sets."
     },
     {
-      "name": "…waves",
-      "kind": "audio",
-      "url": "https://matthettich.github.io/waves/",
-      "description": "Modular synth. Patch oscillators, control and effects with cables, and play it from MIDI or your keyboard."
+      "name": "…pump",
+      "kind": "plugins",
+      "url": "https://github.com/matthettich/pump",
+      "description": "Mastering plugins and creative effects and instruments, for Mac and Windows: EQ, dynamics, auto-mastering, springs, granular and more."
     },
     {
-      "name": "Quite Noise",
-      "kind": "sleep",
-      "url": "https://matthettich.github.io/Quite-Noise/",
-      "description": "Sleep noise generator. White, pink and more, shaped with a filter and EQ, with a sleep timer."
+      "name": "Daily meds",
+      "kind": "health",
+      "url": "https://matthettich.github.io/Daily-Meds/",
+      "description": "A daily checklist for meds and supplements that also tracks symptoms, meals and sleep, with summaries to share with a doctor."
     }
   ],
   "contact": {

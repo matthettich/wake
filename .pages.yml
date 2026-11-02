@@ -105,7 +105,7 @@ content:
             label: Tag
             type: select
             options:
-              values: [audio, video, sleep]
+              values: [audio, video, plugins, health, sleep]
           - { name: url, label: Link, type: string }
           - { name: description, label: Description, type: text }
 
