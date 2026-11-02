@@ -28,7 +28,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap">
 <style>
 /* ==========================================================================================
-   1 TOKENS: the IDM skin from ...Thunder Plus. Grey paper and black ink, one hazard orange,
+   1 TOKENS: the IDM skin from ...Thunder Plus, with its neon pink. Grey paper and black ink, one neon pink,
    a little blue; JetBrains Mono throughout. Every colour and font on the page comes from here.
    Layout: a sky band (dithered cloud deck + a floating crown of areoles) with a wide tracker
    docked on its clouds, then flat panels for bio, music, apps and contact.
@@ -42,8 +42,8 @@
   --muted:#505050;    /* labels, secondary text */
   --dim:#bdbcb6;      /* faint lines, the keys' offset block, empty tracker rows */
   --on:#ffffff;       /* text on a filled (ink) key */
-  --soft:#ff4d00;     /* the hazard orange: play, notes as they play, links, the areole dots */
-  --on-soft:#141414;  /* text on orange */
+  --soft:#ff2d8a;     /* the neon pink: play, notes as they play, links, the areole dots */
+  --on-soft:#141414;  /* text on pink */
   --alt:#2a6cff;      /* the blue: track and audio tags */
   --line:var(--ink);
   --cloud:#f7f6f2; --cloud2:#d2d1ca; --spine:#8a8984;   /* cloud body, cloud shadow, cactus spines */
@@ -104,8 +104,8 @@ strong,b{font-weight:700}
 .btn:active,.btn.dn{transform:translate(3px,3px); box-shadow:var(--btn-shadow-dn)}
 .btn.on,.btn.fill{background:var(--ink); color:var(--on); border-color:var(--ink)}
 .btn.fill:hover{background:var(--muted); border-color:var(--muted)}
-.btn.hot{background:var(--soft); color:var(--on-soft); border-color:var(--ink)}   /* the orange play key */
-.btn.hot:hover{background:#ff6a26}
+.btn.hot{background:var(--soft); color:var(--on-soft); border-color:var(--ink)}   /* the pink play key */
+.btn.hot:hover{background:#ff5aa5}
 .btn.small{min-height:34px; padding:5px 11px; font-size:12px}
 .btn[disabled]{opacity:.45; pointer-events:none}
 .btn .arr{opacity:.8}
@@ -859,7 +859,7 @@ footer .fin{display:flex; flex-wrap:wrap; gap:8px 20px; justify-content:space-be
       if (!dragging && durMs) seek.value = Math.round(ms / durMs * 1000);
     }
     function tick(){ raf = 0; if (!playing || !au) return; paint(au.time() * 1000); raf = requestAnimationFrame(tick); }
-    // the play key: orange to play, black while playing
+    // the play key: pink to play, black while playing
     function setBtn(){ btn.textContent = playing ? '■ Stop' : '▶ Play'; btn.classList.toggle('on', playing); btn.classList.toggle('hot', !playing); btn.setAttribute('aria-pressed', String(playing)); }
     async function play(){
       if (!au) return;
