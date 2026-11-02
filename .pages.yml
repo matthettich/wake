@@ -1,0 +1,125 @@
+# Pages CMS setup (https://app.pagescms.org): gives content.json a form editor.
+# Every field below maps to the same name in content.json. Only people with write access
+# to this GitHub repo can sign in and save.
+media:
+  - name: images
+    label: Images
+    input: images
+    output: images
+    categories: [image]
+  - name: tracks
+    label: Tracks
+    input: tracks
+    output: tracks
+    extensions: [json, mp3, ogg, m4a, wav]
+
+content:
+  - name: wake
+    label: wake.mobi
+    type: file
+    path: content.json
+    fields:
+      - name: site
+        label: Site
+        type: object
+        fields:
+          - { name: name, label: Name in the top bar and hero, type: string }
+          - { name: title, label: Browser tab title, type: string }
+          - { name: tagline, label: Tagline, type: text }
+          - { name: location, label: Location, type: string }
+          - { name: coords, label: Coordinates, type: string }
+          - name: defaultSkin
+            label: Default skin
+            description: auto picks Simple cloud, or Simple cloud night when the visitor's device is in dark mode.
+            type: select
+            options:
+              values: [auto, cloud, cloudnight, plum, night, minimal, minblack, pastel]
+
+      - name: links
+        label: Links (top of the page and in Contact)
+        type: object
+        list: true
+        fields:
+          - { name: label, label: Label, type: string }
+          - { name: url, label: Link, type: string }
+
+      - name: tracks
+        label: Tracks in the tracker (the first one loads first)
+        type: object
+        list: true
+        fields:
+          - { name: title, label: Title, type: string }
+          - { name: note, label: Line under the tracker, type: text }
+          - name: data
+            label: Web export (.json from ...Thunder Plus)
+            type: file
+            options: { media: tracks, extensions: [json] }
+          - name: audio
+            label: Audio (.mp3 render of the same song)
+            type: file
+            options: { media: tracks, extensions: [mp3, ogg, m4a, wav] }
+
+      - name: bio
+        label: Bio
+        type: object
+        fields:
+          - name: photo
+            label: Photo
+            type: image
+            options: { media: images }
+          - { name: photoAlt, label: Photo description, type: string }
+          - name: paragraphs
+            label: Paragraphs ([link text](https://...), **bold**, *italic*)
+            type: text
+            list: true
+
+      - name: music
+        label: Music
+        type: object
+        fields:
+          - { name: intro, label: Intro, type: text }
+          - { name: listenLabel, label: Line above the releases, type: string }
+          - name: releases
+            label: Releases (top of the list shows first)
+            type: object
+            list: true
+            fields:
+              - { name: title, label: Title, type: string }
+              - name: type
+                label: Type
+                type: select
+                options:
+                  values: [album, ep, track]
+              - { name: year, label: Year, type: string }
+              - { name: url, label: Bandcamp page, type: string }
+              - name: embed
+                label: Bandcamp player
+                description: "album=123… or track=123…, from the number in Bandcamp's Share / Embed code. Leave empty for no player."
+                type: string
+              - name: cover
+                label: Cover image
+                description: A Bandcamp image link, or images/name.jpg after uploading it under Images.
+                type: string
+
+      - name: apps
+        label: Apps
+        type: object
+        list: true
+        fields:
+          - { name: name, label: Name, type: string }
+          - name: kind
+            label: Tag
+            type: select
+            options:
+              values: [audio, video, sleep]
+          - { name: url, label: Link, type: string }
+          - { name: description, label: Description, type: text }
+
+      - name: contact
+        label: Contact
+        type: object
+        fields:
+          - { name: text, label: Message, type: text }
+          - { name: email, label: Email (leave empty to hide), type: string }
+          - { name: buttonLabel, label: Button label, type: string }
+          - { name: buttonUrl, label: Button link, type: string }

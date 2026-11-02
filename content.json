@@ -1,0 +1,151 @@
+{
+  "site": {
+    "name": "...wake",
+    "title": "WAKE · electronic music and hip hop beats by Matthew Hettich",
+    "tagline": "Electronic music and hip hop beats by Matthew Hettich, a.k.a. WAKE.",
+    "location": "Santa Fe, NM",
+    "coords": "35.687°N 105.938°W",
+    "defaultSkin": "auto"
+  },
+  "links": [
+    {
+      "label": "Bandcamp",
+      "url": "https://wake.bandcamp.com"
+    },
+    {
+      "label": "SoundCloud",
+      "url": "https://soundcloud.com/wakewake"
+    },
+    {
+      "label": "Instagram",
+      "url": "https://instagram.com/wa_ke"
+    },
+    {
+      "label": "Facebook",
+      "url": "https://www.facebook.com/pages/Wake/9511166070"
+    }
+  ],
+  "tracks": [
+    {
+      "title": "Demo: electro",
+      "note": "Made in ...Thunder Plus with its Electro presets. Swap in your own export.",
+      "data": "tracks/demo.json",
+      "audio": "tracks/demo.mp3"
+    }
+  ],
+  "bio": {
+    "photo": "images/bio.jpg",
+    "photoAlt": "Matthew Hettich",
+    "paragraphs": [
+      "[**Wake**](https://soundcloud.com/wakewake) is [Matthew Michael Ahern Hettich](https://wake.bandcamp.com), *a SANTA FE, NM* based electronic musician who daylights as the Audio, Video, and Lighting Director at [Meow Wolf](https://meowwolf.com) and moonlights as an IDM nurd.",
+      "Matthew was born in Miami, FL but soon emigrated to the floating cloud city/colony [CP09E8](https://renoise.com), currently in orbit around Europa. It was there he apprenticed with Strand Trank, the universally renowned master digi-organic sound craftsman.",
+      "It was Strand Trank who introduced Matthew to the **Renoise Lifestyle Group** (R.L.G.) and the associated **Clan of the Kick Drum** (C.o.t.K.D.), where he learned to properly honor the **Great Square Wave**.",
+      "After Leaving CP09E8 for the ceremonial **Fast Fourier Transform**, Matthew settled briefly in Los Angeles, CA, to train at the [California Institute of the Arts Music Technology Dojo](https://music.calarts.edu/programs-specializations/music-technology). It was there, during the recent Comet Crisis, that he met fellow R.L.G. member, [*Denny Denny Breakfast*](http://dennydennybreakfast.com/), with whom he runs the [**Total Fucking Pizza Party**](http://tfpp.net/). It was also in L.A. that he began to roll with the notorious \"[PROXIMAL RECORDS](http://proximalrecords.com/)\" collective.",
+      "It was the death of Strand Trank that motivated Matthew to move to Oakland, CA, to seek graduate counsel (at [Mills College](https://www.mills.edu/academics/graduate-programs/music/center-contemporary-music/index.php)) with the last remaining Sawtooth of the C.o.t.K.D., Vibroy \"Honest\" James. It was in Oakland that he and his soul brother, [Hydroplane](https://schematicmusiccompany.bandcamp.com/album/panda), started [**Biceptuals**](https://soundcloud.com/biceptuals-1), an order of physically well toned techno-monks. Before emigrating to p408, \"Honest\" blessed Matthew with the **Sacred Flange**, at which he stands guard, always holding the **Traditional Phasor.**",
+      "It was during his guard at 'the Flange' that he fell in with [Schematic Records](http://schematic.net), and it was 'the Flange' that eventually sent him to Santa Fe to work with the immersive art group [*Meow Wolf*](https://meowwolf.com).",
+      "Matthew and [Wyatt Keusch](https://jazz.fish/) are currently recruiting members into a new psychic-cult of “net-label esoterica” known as [Elexve](https://elexve.com/)."
+    ]
+  },
+  "music": {
+    "intro": "This is some Electronic Music made by MATTHEW \"WAKE\" HETTICH over the past 15 or so years. Not all of the music is here but a bunch of it is. You can also check [Bandcamp](https://wake.bandcamp.com)!",
+    "listenLabel": "please LISTEN 2 STUFF:",
+    "releases": [
+      {
+        "title": "The Son Wnt Aut",
+        "type": "track",
+        "year": "2012",
+        "url": "https://wake.bandcamp.com/track/the-son-wnt-aut",
+        "embed": "track=3511454806",
+        "cover": "https://f4.bcbits.com/img/a1770590009_5.jpg"
+      },
+      {
+        "title": "Meat Mountain",
+        "type": "album",
+        "year": "2010",
+        "url": "https://wake.bandcamp.com/album/meat-mountain",
+        "embed": "album=858475237",
+        "cover": "https://f4.bcbits.com/img/a3926463752_5.jpg"
+      },
+      {
+        "title": "West From Here",
+        "type": "track",
+        "year": "",
+        "url": "https://wake.bandcamp.com/track/west-from-here",
+        "embed": "track=2757020183",
+        "cover": "https://f4.bcbits.com/img/a4135978071_5.jpg"
+      },
+      {
+        "title": "Trouble The With (2-Channel Studio Version)",
+        "type": "album",
+        "year": "2011",
+        "url": "https://wake.bandcamp.com/album/trouble-the-with-2-channel-studio-version",
+        "embed": "album=1974608922",
+        "cover": "https://f4.bcbits.com/img/a2195719411_5.jpg"
+      },
+      {
+        "title": "The Sun Went Out",
+        "type": "track",
+        "year": "2010",
+        "url": "https://wake.bandcamp.com/track/the-sun-went-out",
+        "embed": "track=2844750983",
+        "cover": "https://f4.bcbits.com/img/a0643786119_5.jpg"
+      },
+      {
+        "title": "Trouble The With (Live at Mills College)",
+        "type": "track",
+        "year": "2010",
+        "url": "https://wake.bandcamp.com/track/trouble-the-with-live-at-mills-college",
+        "embed": "track=2946727411",
+        "cover": "https://f4.bcbits.com/img/a2018607741_5.jpg"
+      },
+      {
+        "title": "Halloween III",
+        "type": "album",
+        "year": "2010",
+        "url": "https://wake.bandcamp.com/album/halloween-iii",
+        "embed": "album=3338975717",
+        "cover": "https://f4.bcbits.com/img/a1990384601_5.jpg"
+      },
+      {
+        "title": "... And The Giving Hand",
+        "type": "album",
+        "year": "2009",
+        "url": "https://wake.bandcamp.com/album/and-the-giving-hand",
+        "embed": "album=1819027640",
+        "cover": "https://f4.bcbits.com/img/a1288616384_5.jpg"
+      }
+    ]
+  },
+  "apps": [
+    {
+      "name": "...Thunder Plus",
+      "kind": "audio",
+      "url": "https://matthettich.github.io/thunder-plus/",
+      "description": "Drum and synth workstation with a tracker, modular synths and a pile of effects. Runs in the browser."
+    },
+    {
+      "name": "...Seeds",
+      "kind": "video",
+      "url": "https://matthettich.github.io/seeds/",
+      "description": "Modular video patching: camera, effects and recording, with MIDI control and a clip mode for live sets."
+    },
+    {
+      "name": "…waves",
+      "kind": "audio",
+      "url": "https://matthettich.github.io/waves/",
+      "description": "Modular synth. Patch oscillators, control and effects with cables, and play it from MIDI or your keyboard."
+    },
+    {
+      "name": "Quite Noise",
+      "kind": "sleep",
+      "url": "https://matthettich.github.io/Quite-Noise/",
+      "description": "Sleep noise generator. White, pink and more, shaped with a filter and EQ, with a sleep timer."
+    }
+  ],
+  "contact": {
+    "text": "L.M.K. SUP w/YOU! I’ll play or DJ your Quinceañera.",
+    "email": "",
+    "buttonLabel": "Message me on Bandcamp",
+    "buttonUrl": "https://wake.bandcamp.com/contact?b=3288413117&n=Wake"
+  }
+}
