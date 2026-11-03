@@ -286,6 +286,12 @@ footer .fin{display:flex; flex-wrap:wrap; gap:8px 20px; justify-content:space-be
   .rel .meta2{flex:1 1 0; min-width:0; display:flex; flex-direction:column; gap:8px}
   .rel .acts,.rel .bar{flex-basis:100%}
 }
+/* MUSIC on phones: only the picks ("featured" in content.json) until "Show more" opens the lot, newest first */
+.more{display:none; justify-content:center; margin-top:18px}
+@media (max-width:640px){
+  .releases.short .rel:not(.pick){display:none}
+  .more.has{display:flex}
+}
 </style>
 </head>
 <body>
@@ -376,6 +382,7 @@ footer .fin{display:flex; flex-wrap:wrap; gap:8px 20px; justify-content:space-be
       <p class="intro" id="musicIntro"></p>
       <p class="listen" id="listenLabel"></p>
       <div class="grid releases" id="releases"></div>
+      <div class="more"><button class="btn" id="moreBtn" type="button" aria-controls="releases" aria-expanded="false"></button></div>
     </div>
   </section>
 
@@ -509,18 +516,18 @@ footer .fin{display:flex; flex-wrap:wrap; gap:8px 20px; justify-content:space-be
       ctx.beginPath(); ctx.moveTo(o0[0], o0[1]); ctx.lineTo(e[0], e[1]); ctx.strokeStyle = rgba(COL.dim); ctx.lineWidth = 1; ctx.stroke();
     }
     if (n < 3) return;
-    const hot = mix(COL.soft, COL.ink, 0.3), glow = o.glow || 0, wide = o.scale || 1;
+    const hot = COL.soft, glow = o.glow || 0, wide = o.scale || 1;   // the neon pink of the play key
     const pieces = 32, per = Math.max(2, Math.floor(n / pieces));
     for (let s0 = 0; s0 < n - 1; s0 += per){
       const s1 = Math.min(n - 1, s0 + per), age = s1 / n;
       ctx.beginPath();
       for (let i = s0; i <= s1; i++){ const pt = project(trail[i], swap, cx, cy, sc, yaw); if (i === s0) ctx.moveTo(pt[0], pt[1]); else ctx.lineTo(pt[0], pt[1]); }
-      ctx.strokeStyle = rgba(age > 0.85 && glow > 0.05 ? mix(hot, COL.soft, Math.min(1, glow)) : hot, 0.08 + 0.92 * age * age);
+      ctx.strokeStyle = rgba(hot, 0.08 + 0.92 * age * age);
       ctx.lineWidth = (0.8 + 1.4 * age) * wide * (1 + 0.6 * glow * age * age); ctx.stroke();
     }
     const hd = project(trail[n - 1], swap, cx, cy, sc, yaw);
     ctx.beginPath(); ctx.arc(hd[0], hd[1], (4 + 4 * glow) * wide, 0, Math.PI * 2);
-    ctx.fillStyle = rgba(glow > 0.05 ? COL.soft : COL.ink); ctx.fill();
+    ctx.fillStyle = rgba(COL.soft); ctx.fill();
   }
 
   /* ---- the hero's ORBIT screen: runs one system live; tap it for the next system.
@@ -754,6 +761,22 @@ footer .fin{display:flex; flex-wrap:wrap; gap:8px 20px; justify-content:space-be
     $('musicMeta').textContent = rels.length + (rels.length === 1 ? ' release' : ' releases');   // "8 RELEASES" by the heading
     const grid = $('releases'); grid.innerHTML = '';
     rels.forEach((r, i) => grid.appendChild(releaseCard(r, i)));
+    // phones: just the picks ("featured": true), with "Show more" for everything, newest first
+    const picks = rels.filter(r => r.featured).length, more = $('moreBtn'), wrap = more.parentNode;
+    const phone = matchMedia('(max-width:640px)');
+    let open = false;
+    function set(){
+      grid.classList.toggle('short', !open && picks > 0);
+      more.textContent = open ? (mu.lessLabel || 'Show less') : (mu.moreLabel || 'Show more') + ' (' + (rels.length - picks) + ')';
+      more.setAttribute('aria-expanded', String(open));
+      wrap.classList.toggle('has', picks > 0 && picks < rels.length);
+      // the hex numbers count the cards you can see
+      let k = 0; grid.querySelectorAll('.rel').forEach(c => { if (c.offsetParent !== null || !phone.matches) c.querySelector('.num').textContent = hex2(++k); });
+      $('musicMeta').textContent = rels.length + (rels.length === 1 ? ' release' : ' releases');
+    }
+    more.onclick = () => { const was = open; open = !open; set(); if (was) $('music').scrollIntoView({block:'start'}); };
+    phone.addEventListener('change', set);
+    set();
   }
 
   // Bandcamp players show on the real site (any web address), not in Claude's preview, which
@@ -766,9 +789,10 @@ footer .fin{display:flex; flex-wrap:wrap; gap:8px 20px; justify-content:space-be
        year   shown at the right of the card's top line (leave "" to hide)
        url    the Bandcamp page: the "Bandcamp ›" button
        embed  "album=123…" or "track=123…" from Bandcamp's Share / Embed code: adds "▶ Play here"
-       cover  an image link (Bandcamp art, or images/name.jpg); without one, a still ORBIT is drawn   */
+       cover  an image link (Bandcamp art, or images/name.jpg); without one, a still ORBIT is drawn
+       featured  true: one of the few shown on phones before "Show more"   */
   function releaseCard(r, i){
-    const card = document.createElement('article'); card.className = 'card rel';
+    const card = document.createElement('article'); card.className = 'card rel' + (r.featured ? ' pick' : '');
     const type = (r.type || 'album').toLowerCase();
 
     // .art: the cover art, or a still ORBIT if there's none or it fails to load
