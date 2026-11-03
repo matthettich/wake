@@ -204,7 +204,8 @@ section.sec{padding-block:34px}
    9 MUSIC
    The intro text, the line above the cards, then one card per release (built by renderMusic
    and releaseCard in the script). Card, top to bottom:
-     .art   the cover: Bandcamp art, a still ORBIT when there's no art, or the Bandcamp player
+     .art   the cover: Bandcamp art, or a still ORBIT when there's no art
+     .bar   the slim Bandcamp player, added under the cover by "▶ Play here"
      .row1  release number (hex) · type pill (album / ep / track) · year
      h3     the title
      .acts  "▶ Play here" (opens the Bandcamp player in the card) and the Bandcamp link
@@ -218,8 +219,8 @@ section.sec{padding-block:34px}
 .rel{display:flex; flex-direction:column; gap:11px; padding:12px 12px 14px}
 .rel .art{position:relative; aspect-ratio:1; width:100%; max-width:100%; border:1px solid var(--line); overflow:hidden; background:var(--bg)}
 .rel .art img,.rel .art canvas{display:block; width:100%; height:100%; object-fit:cover}
-.rel .art.bc{aspect-ratio:auto; height:120px; border:0; background:transparent}   /* the Bandcamp player, once opened */
-.rel .art.bc iframe{border:0; width:100%; height:120px; display:block}
+.rel .bar{border:1px solid var(--line); background:var(--panel); height:42px; overflow:hidden}   /* the slim Bandcamp player, once opened, under the cover */
+.rel .bar iframe{border:0; width:100%; height:42px; display:block}
 .rel .row1, .app .row1{display:flex; align-items:center; gap:8px; font-size:11px; letter-spacing:.08em; text-transform:uppercase; color:var(--muted)}
 .rel .row1 .yr{margin-left:auto}
 .pill.album{color:var(--ink)} .pill.track,.pill.ep{color:var(--alt)}
@@ -283,7 +284,7 @@ footer .fin{display:flex; flex-wrap:wrap; gap:8px 20px; justify-content:space-be
   .rel{flex-direction:row; flex-wrap:wrap; align-items:flex-start}
   .rel .art:not(.bc){width:96px; flex:none}
   .rel .meta2{flex:1 1 0; min-width:0; display:flex; flex-direction:column; gap:8px}
-  .rel .acts{flex-basis:100%}
+  .rel .acts,.rel .bar{flex-basis:100%}
 }
 </style>
 </head>
@@ -781,7 +782,7 @@ footer .fin{display:flex; flex-wrap:wrap; gap:8px 20px; justify-content:space-be
     meta.innerHTML = '<div class="row1"><span class="num">' + hex2(i + 1) + '</span><span class="pill ' + esc(type) + '">' + esc(type) + '</span>' +
       (r.year ? '<span class="yr num">' + esc(r.year) + '</span>' : '') + '</div><h3>' + esc(r.title) + '</h3>';
 
-    // .acts: "▶ Play here" swaps the cover for Bandcamp's player (in the skin's colours), then the Bandcamp link
+    // .acts: "▶ Play here" adds Bandcamp's slim player (in the skin's colours) under the cover, then the Bandcamp link
     const acts = document.createElement('div'); acts.className = 'acts';
     const embed = (r.embed || '').trim();
     if (embed && canEmbed && /^(album|track)=\d+$/.test(embed)){
@@ -789,8 +790,10 @@ footer .fin{display:flex; flex-wrap:wrap; gap:8px 20px; justify-content:space-be
       b.addEventListener('click', () => {
         const f = document.createElement('iframe');
         f.title = (r.title || 'Release') + ' on Bandcamp'; f.loading = 'lazy'; f.setAttribute('seamless', '');
-        f.src = 'https://bandcamp.com/EmbeddedPlayer/' + embed + '/size=large/bgcol=' + hexOf(COL.panel) + '/linkcol=' + hexOf(COL.soft) + '/tracklist=false/artwork=small/transparent=true/';
-        art.className = 'art bc'; art.innerHTML = ''; art.appendChild(f); b.remove();
+        f.src = 'https://bandcamp.com/EmbeddedPlayer/' + embed + '/size=small/bgcol=' + hexOf(COL.panel) + '/linkcol=' + hexOf(COL.soft) + '/artwork=none/transparent=true/';
+        f.allow = 'autoplay';
+        const bar = document.createElement('div'); bar.className = 'bar'; bar.appendChild(f);
+        card.insertBefore(bar, acts); b.remove();   // the cover stays; the slim player sits above the buttons
       });
       acts.appendChild(b);
     }
