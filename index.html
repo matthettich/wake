@@ -767,7 +767,7 @@ footer .fin{display:flex; flex-wrap:wrap; gap:8px 20px; justify-content:space-be
     let open = false;
     function set(){
       grid.classList.toggle('short', !open && picks > 0);
-      more.textContent = open ? (mu.lessLabel || 'Show less') : (mu.moreLabel || 'Show all') + ' (' + (rels.length - picks) + ')';
+      more.textContent = open ? (mu.lessLabel || 'Show less') : (mu.moreLabel || 'Show all') + ' (' + rels.length + ')';
       more.setAttribute('aria-expanded', String(open));
       wrap.classList.toggle('has', picks > 0 && picks < rels.length);
       // the hex numbers count the cards you can see
