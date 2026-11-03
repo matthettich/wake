@@ -95,6 +95,7 @@ h1{font-family:var(--f-name); font-weight:700; text-transform:uppercase; font-si
 .help{display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:14px}
 .help .card{background:var(--panel); border:1px solid var(--line); padding:18px 20px}
 .help h3{margin:0 0 6px; font-size:18px; font-weight:800}
+.help .first{grid-column:1/-1; border-width:2px; box-shadow:inset 6px 0 0 var(--soft)}
 .help p{margin:0}
 
 footer{padding-block:30px 44px; color:var(--muted); font-size:13px}
@@ -219,6 +220,10 @@ footer .fin{display:flex; flex-wrap:wrap; gap:8px 20px; justify-content:space-be
   <section class="sec wrap" id="help" aria-labelledby="helpH">
     <div class="sechead"><h2 id="helpH">If something goes wrong</h2></div>
     <div class="help">
+      <div class="card first">
+        <h3>Something doesn't look exactly like the video</h3>
+        <p>Text or call Matt. The app hasn't been tested on every phone yet, so there may be bugs. Often, though, things are just in a different order. For example, Gmail might be the second icon in the row of apps instead of the first.</p>
+      </div>
       <div class="card">
         <h3>Deleted one by mistake</h3>
         <p>Press <span class="key">UNDO</span> at the bottom of the screen straight away. Missed it? Scroll to the bottom and tap <b>Recently deleted</b>, then <b>Restore</b>. Deleted recordings are kept there for 30 days.</p>
@@ -233,7 +238,7 @@ footer .fin{display:flex; flex-wrap:wrap; gap:8px 20px; justify-content:space-be
         <p>You may have pressed Don't allow. In Chrome, open the <b>⋮</b> menu → <b>Settings</b> → <b>Site settings</b> → <b>Microphone</b>, and allow <b>matthettich.github.io</b>.</p>
       </div>
       <div class="card">
-        <h3>Using the USB microphone</h3>
+        <h3>If you have a microphone</h3>
         <p>Plug it into the phone before pressing REC. The app uses it on its own; the small line under REC shows which microphone is recording.</p>
       </div>
       <div class="card">
