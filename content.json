@@ -364,7 +364,7 @@
       "name": "Simple recorder",
       "kind": "audio",
       "url": "https://matthettich.github.io/simple-recorder/",
-      "description": "Record guitar on your phone, see the waveform, play it back and email it to yourself, in M4A or 24-bit WAV, with a USB mic if you have one. [How to use it](/recorder/)."
+      "description": "Record on your phone, see the waveform, play it back and email it to yourself, in M4A or 24-bit WAV, with a USB mic if you have one. [How to use it](/recorder/)."
     },
     {
       "name": "...Seeds",
