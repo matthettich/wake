@@ -48,6 +48,126 @@
     "listenLabel": "please LISTEN 2 STUFF:",
     "releases": [
       {
+        "title": "Viridiflora",
+        "type": "ep",
+        "year": "2025",
+        "url": "https://schematicmusiccompany.bandcamp.com/album/viridiflora",
+        "embed": "album=609721323",
+        "cover": "https://f4.bcbits.com/img/a3669102030_5.jpg"
+      },
+      {
+        "title": "XX TOKYX (Wake Remix) · SXXL ODDXXY",
+        "type": "track",
+        "year": "2023",
+        "url": "https://schematicmusiccompany.bandcamp.com/track/xx-tokyx-wake-remix",
+        "embed": "track=2292144843",
+        "cover": "https://f4.bcbits.com/img/a3597092651_5.jpg"
+      },
+      {
+        "title": "Zappy (Broken Fin Remix by Wake) · Global Goon & Ossa",
+        "type": "track",
+        "year": "2023",
+        "url": "https://schematicmusiccompany.bandcamp.com/track/zappy-broken-fin-remix-by-wake",
+        "embed": "",
+        "cover": "https://f4.bcbits.com/img/a1888697429_5.jpg"
+      },
+      {
+        "title": "(305) 666-4CID · Wake & Girlcop",
+        "type": "album",
+        "year": "2023",
+        "url": "https://schematicmusiccompany.bandcamp.com/album/305-666-4cid",
+        "embed": "album=2286519477",
+        "cover": "https://f4.bcbits.com/img/a1144468623_5.jpg"
+      },
+      {
+        "title": "Stage IV (slow dirty headache)",
+        "type": "track",
+        "year": "2023",
+        "url": "https://schematicmusiccompany.bandcamp.com/track/stage-iv-slow-dirty-headache",
+        "embed": "",
+        "cover": "https://f4.bcbits.com/img/a4198619980_5.jpg"
+      },
+      {
+        "title": "Minimal Gains · Khulii",
+        "type": "track",
+        "year": "2023",
+        "url": "https://schematicmusiccompany.bandcamp.com/track/minimal-gains",
+        "embed": "",
+        "cover": "https://f4.bcbits.com/img/a4198619980_5.jpg"
+      },
+      {
+        "title": "Exit Language Translator · Ossa feat. Chad Mossholder & Wake",
+        "type": "track",
+        "year": "2022",
+        "url": "https://schematicmusiccompany.bandcamp.com/track/exit-language-translator-featuring-chad-mossholder-wake",
+        "embed": "",
+        "cover": "https://f4.bcbits.com/img/a4181329030_5.jpg"
+      },
+      {
+        "title": "Seagull Island",
+        "type": "album",
+        "year": "2022",
+        "url": "https://schematicmusiccompany.bandcamp.com/album/seagull-island",
+        "embed": "album=4033855738",
+        "cover": "https://f4.bcbits.com/img/a2923809807_5.jpg"
+      },
+      {
+        "title": "Orange Cider (Wake Remix) · Ossa",
+        "type": "track",
+        "year": "2021",
+        "url": "https://schematicmusiccompany.bandcamp.com/track/orange-cider-wake-remix",
+        "embed": "",
+        "cover": "https://f4.bcbits.com/img/a1524193197_5.jpg"
+      },
+      {
+        "title": "Ovis Canadensis · Ossa & Wake",
+        "type": "album",
+        "year": "2021",
+        "url": "https://schematicmusiccompany.bandcamp.com/album/ovis-canadensis",
+        "embed": "album=2291450670",
+        "cover": "https://f4.bcbits.com/img/a2399882145_5.jpg"
+      },
+      {
+        "title": "Middle Ear Infection · Wake & Ossa",
+        "type": "album",
+        "year": "2020",
+        "url": "https://schematicmusiccompany.bandcamp.com/album/middle-ear-infection-tremendo-equipo",
+        "embed": "album=1654817486",
+        "cover": "https://f4.bcbits.com/img/a1815505322_5.jpg"
+      },
+      {
+        "title": "Step Components · Khulii",
+        "type": "album",
+        "year": "2020",
+        "url": "https://schematicmusiccompany.bandcamp.com/album/step-components",
+        "embed": "album=997311257",
+        "cover": "https://f4.bcbits.com/img/a3502222361_5.jpg"
+      },
+      {
+        "title": "Encounters With Owls",
+        "type": "ep",
+        "year": "2020",
+        "url": "https://schematicmusiccompany.bandcamp.com/album/encounters-with-owls",
+        "embed": "album=938114123",
+        "cover": "https://f4.bcbits.com/img/a1148082746_5.jpg"
+      },
+      {
+        "title": "Murder Gloves",
+        "type": "ep",
+        "year": "2020",
+        "url": "https://schematicmusiccompany.bandcamp.com/album/murder-gloves",
+        "embed": "album=2849081972",
+        "cover": "https://f4.bcbits.com/img/a2402432582_5.jpg"
+      },
+      {
+        "title": "Am Diamond",
+        "type": "album",
+        "year": "2017",
+        "url": "https://schematicmusiccompany.bandcamp.com/album/am-diamond",
+        "embed": "album=2069260453",
+        "cover": "https://f4.bcbits.com/img/a2698433984_5.jpg"
+      },
+      {
         "title": "The Son Wnt Aut",
         "type": "track",
         "year": "2012",
