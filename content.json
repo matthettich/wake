@@ -121,16 +121,16 @@
       "description": "Drum and synth workstation with a tracker, modular synths and a pile of effects. Runs in the browser."
     },
     {
+      "name": "Simple recorder",
+      "kind": "audio",
+      "url": "https://matthettich.github.io/simple-recorder/",
+      "description": "Record guitar on your phone, see the waveform, play it back and email it to yourself, in M4A or 24-bit WAV, with a USB mic if you have one. [How to use it](/recorder/)."
+    },
+    {
       "name": "...Seeds",
       "kind": "video",
       "url": "https://matthettich.github.io/seeds/",
       "description": "Modular video patching: camera, effects and recording, with MIDI control and a clip mode for live sets."
-    },
-    {
-      "name": "…pump",
-      "kind": "plugins",
-      "url": "https://github.com/matthettich/pump",
-      "description": "Mastering plugins and creative effects and instruments, for Mac and Windows: EQ, dynamics, auto-mastering, springs, granular and more."
     },
     {
       "name": "Daily meds",
