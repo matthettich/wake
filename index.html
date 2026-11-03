@@ -573,7 +573,7 @@ footer .fin{display:flex; flex-wrap:wrap; gap:8px 20px; justify-content:space-be
     document.addEventListener('visibilitychange', () => document.hidden ? stop() : start());
     new ResizeObserver(() => size()).observe(cv);
     return {
-      init(){ choose(0); size(); start(); },
+      init(){ choose(3); size(); start(); },   // opens on Thomas; tap for the others
       flash(i, n, v){ energy = Math.min(1.5, energy + 0.35 * v); if (A && i === 0) A.nudge(0.04 * v); if (reduceMotion) draw(); }
     };
   })();
