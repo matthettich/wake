@@ -18,7 +18,7 @@
     STYLE   1 TOKENS (the IDM skin) · 2 BASE · 3 TOP BAR · 4 KEYS (buttons) · 5 HERO & SKY · 6 TRACKER
             7 SECTIONS & CARDS · 8 BIO · 9 MUSIC · 10 APPS · 11 CONTACT · 12 FOOTER · 13 NARROW SCREENS
     HTML    TOP BAR · HERO · TRACKER · BIO · MUSIC · APPS · CONTACT · FOOTER
-    SCRIPT  A HELPERS · B COLOURS · C ORBIT (the hero's ORBIT screen) · D SKY · E COVERS · F TEXT HELPERS
+    SCRIPT  A HELPERS · B COLOURS · C ORBIT (still covers) · D SKY · E COVERS · F TEXT HELPERS
             G CONTENT (renderHero, renderBio, renderMusic, renderApps, renderContact)
             H AUDIO · I TRACKER PLAYER · J NAV TABS · K START
   ============================================================================================
@@ -30,7 +30,7 @@
 /* ==========================================================================================
    1 TOKENS: the IDM skin from ...Thunder Plus, with its neon pink. Grey paper and black ink, one neon pink,
    a little blue; JetBrains Mono throughout. Every colour and font on the page comes from here.
-   Layout: a sky band (dithered cloud deck + an ORBIT screen like pump ORBIT's) with a wide tracker
+   Layout: a sky band (dithered cloud deck) with a wide tracker
    docked on its clouds, then flat panels for bio, music, apps and contact.
    ========================================================================================== */
 :root{
@@ -114,21 +114,16 @@ strong,b{font-weight:700}
 .btn .arr{opacity:.8}
 
 /* ==========================================================================================
-   5 HERO & SKY: the canvas (#sky) draws the clouds; the ORBIT animation (#orbit) floats on them
+   5 HERO & SKY: the canvas (#sky) draws the clouds
    ========================================================================================== */
 .hero{position:relative; overflow:hidden; padding-block:52px 120px; isolation:isolate}
 #sky{position:absolute; inset:0; width:100%; height:100%; z-index:-1; display:block}
-.hero-in{display:grid; grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr); gap:32px; align-items:center}
+.hero-in{display:grid; grid-template-columns:minmax(0,1fr); gap:32px; align-items:center}
 .eyebrow{font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); margin:0 0 16px}
 .eyebrow span + span::before{content:"/"; margin:0 .8em; color:var(--soft)}
 .name{font-family:var(--f-name); font-size:clamp(56px, 10vw, 132px); font-weight:700; text-transform:uppercase; line-height:.88; letter-spacing:0;
   margin:0 0 24px; display:flex; align-items:baseline; flex-wrap:nowrap}
 .tagline{font-size:clamp(14px, 1.6vw, 16px); line-height:1.65; max-width:40ch; margin:0; text-wrap:pretty}
-.hero-fig{display:flex; align-items:center; justify-content:flex-end}
-/* the ORBIT animation: a strange attractor like pump ORBIT's display, straight on the clouds (no box); tap for the next system */
-.orbit{position:relative; display:block; width:min(100%, 480px); aspect-ratio:4/3; padding:0; font:inherit; color:inherit;
-  background:none; border:0; cursor:pointer; -webkit-tap-highlight-color:transparent}
-.orbit canvas{position:absolute; inset:0; width:100%; height:100%; display:block}
 
 /* ==========================================================================================
    6 TRACKER: docked on the cloud deck, plays tracks rendered from ...Thunder Plus
@@ -263,7 +258,6 @@ footer .fin{display:flex; flex-wrap:wrap; gap:8px 20px; justify-content:space-be
 @media (max-width:860px){
   .hero{padding-block:36px 104px}
   .hero-in{grid-template-columns:minmax(0,1fr); gap:8px}
-  .hero-fig{justify-content:center; margin-top:18px}
   .bio.hasphoto{grid-template-columns:minmax(0,1fr)}
   .bio figure{max-width:320px; order:-1}
   .contact{grid-template-columns:minmax(0,1fr)}
@@ -318,7 +312,7 @@ footer .fin{display:flex; flex-wrap:wrap; gap:8px 20px; justify-content:space-be
 </header>
 
 <main id="top">
-  <!-- ===== HERO: name and tagline (content.json "site"); the canvas draws clouds, the ORBIT screen sits on them ===== -->
+  <!-- ===== HERO: name and tagline (content.json "site"); the canvas draws clouds ===== -->
   <section class="hero" id="hero">
     <canvas id="sky" aria-hidden="true"></canvas>
     <div class="wrap hero-in">
@@ -326,11 +320,6 @@ footer .fin{display:flex; flex-wrap:wrap; gap:8px 20px; justify-content:space-be
         <p class="eyebrow" id="eyebrow" hidden></p>
         <h1 class="name" id="siteName" aria-label="wake">wake</h1>
         <p class="tagline" id="tagline">Electronic music by Matthew Hettich.</p>
-      </div>
-      <div class="hero-fig">
-        <button class="orbit" id="orbit" type="button" aria-label="ORBIT display, a strange attractor. Tap for the next system.">
-          <canvas id="orbitCv" aria-hidden="true"></canvas>
-        </button>
       </div>
     </div>
   </section>
@@ -448,8 +437,7 @@ footer .fin{display:flex; flex-wrap:wrap; gap:8px 20px; justify-content:space-be
      C ORBIT: strange attractors, drawn the way pump ORBIT (the chaos synth) shows them: the
      path through a chaotic system in 3D, turning slowly, newest stretch boldest, older loops
      fading, a dot at the head, faint X / Y / Z axes. Same equations and the same CHAOS sweep
-     as ORBIT (pump: plugins/orbit/OrbitSystems.hpp). The hero's ORBIT screen runs one live;
-     release covers without art get a still one.
+     as ORBIT (pump: plugins/orbit/OrbitSystems.hpp). Release covers without art get a still one.
      ======================================================================================== */
   const SYSTEMS = [
     // p(chaos): the parameter CHAOS sweeps; h: the step (a turn of the orbit is about 160 steps); chaos: where it sits here
@@ -530,54 +518,6 @@ footer .fin{display:flex; flex-wrap:wrap; gap:8px 20px; justify-content:space-be
     ctx.fillStyle = rgba(COL.soft); ctx.fill();
   }
 
-  /* ---- the hero's ORBIT screen: runs one system live; tap it for the next system.
-     Orbit.flash(lane, lanes, level) is called by the tracker on every note: the orbit speeds up,
-     glows and gets a small push (a chaotic system makes the most of it). ---- */
-  const Orbit = (() => {
-    const box = $('orbit'), cv = $('orbitCv'), ctx = cv.getContext('2d');
-    const SHOW = 1600, trail = [];
-    let sys = 0, A = null, ext = null, W = 0, H = 0, dpr = 1, yaw = 0.6, energy = 0, acc = 0, last = 0, raf = 0, running = false, visible = true;
-    function choose(i){
-      sys = (i + SYSTEMS.length) % SYSTEMS.length; A = Attractor(sys); trail.length = 0;
-      for (let k = 0; k < SHOW; k++){ A.step(); trail.push(A.point()); }
-      ext = extentOf(trail, A.swap);
-      box.setAttribute('aria-label', 'ORBIT display: the ' + A.name + ' attractor. Tap for the next system.');
-      draw();
-    }
-    function size(){
-      const r = cv.getBoundingClientRect(); dpr = Math.min(2, window.devicePixelRatio || 1);
-      W = Math.max(1, Math.round(r.width)); H = Math.max(1, Math.round(r.height));
-      cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr); draw();
-    }
-    function draw(){
-      if (!W || !A) return;
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, H);
-      drawOrbit(ctx, trail, trail.length, A.swap, W * 0.5, H * 0.5, fitScale(ext, W, H, 18, 18), yaw, {glow:Math.min(1, energy)});
-    }
-    function frame(ts){
-      raf = 0; if (!running) return;
-      const dt = last ? Math.min(0.1, (ts - last) / 1000) : 0; last = ts;
-      yaw += dt * 0.22;                                    // ORBIT's slow turn
-      acc += dt * 100 * (1 + 2.5 * Math.min(1.5, energy)); // about one loop every 1.6 s, faster while notes play
-      let k = Math.floor(acc); acc -= k; k = Math.min(k, 60);
-      while (k-- > 0){ A.step(); trail.push(A.point()); }
-      if (trail.length > SHOW) trail.splice(0, trail.length - SHOW);
-      energy *= Math.pow(0.08, dt);
-      draw();
-      raf = requestAnimationFrame(frame);
-    }
-    function start(){ if (reduceMotion || running || !visible || !A) return; running = true; last = 0; raf = requestAnimationFrame(frame); }   // !A: not until init() has picked a system
-    function stop(){ running = false; if (raf) cancelAnimationFrame(raf); raf = 0; }
-    box.addEventListener('click', () => choose(sys + 1));
-    if ('IntersectionObserver' in window) new IntersectionObserver(es => { visible = es[0].isIntersecting; visible ? start() : stop(); }).observe(box);
-    document.addEventListener('visibilitychange', () => document.hidden ? stop() : start());
-    new ResizeObserver(() => size()).observe(cv);
-    return {
-      init(){ choose(3); size(); start(); },   // opens on Thomas; tap for the others
-      flash(i, n, v){ energy = Math.min(1.5, energy + 0.35 * v); if (A && i === 0) A.nudge(0.04 * v); if (reduceMotion) draw(); }
-    };
-  })();
-
   /* ========================================================================================
      D SKY: the hero's background canvas, an ordered-dither cloud deck drifting slowly.
      Turns itself off when the hero is scrolled away, the tab is hidden, or the visitor
@@ -656,8 +596,8 @@ footer .fin{display:flex; flex-wrap:wrap; gap:8px 20px; justify-content:space-be
     document.addEventListener('visibilitychange', () => document.hidden ? stop() : start());
     let resizeTimer; new ResizeObserver(() => { clearTimeout(resizeTimer); resizeTimer = setTimeout(size, 60); }).observe(hero);
     return {
-      init(){ size(); start(); Orbit.init(); },
-      flash(i, n, v){ Orbit.flash(i, n, v); }
+      init(){ size(); start(); },
+      flash(){}   // the tracker calls this on every note; nothing in the hero reacts now
     };
   })();
 
@@ -969,7 +909,7 @@ footer .fin{display:flex; flex-wrap:wrap; gap:8px 20px; justify-content:space-be
       for (let k = 0; k < nfx; k++){ const f = p[3 + k]; h += (f && f !== '-----') ? ' <span class="fx">' + esc(f.slice(0, 3) + ' ' + f.slice(3)) + '</span>' : ' <span class="fe">··· ··</span>'; }
       return {h, c:!s ? 'c' : note === 'OFF' ? 'c off' : note === '---' ? 'c fx' : 'c n', note};
     }
-    // draw the rows around the playhead at time ms; notes that just played push the ORBIT screen
+    // draw the rows around the playhead at time ms
     // (notes in a muted song block are drawn grey and push nothing: they don't play)
     function paint(ms, force){
       const L = T.lanes;
